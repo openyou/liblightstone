@@ -19,7 +19,7 @@
 
 #ifdef USE_LIBHID
 #include <hid.h>
-typedef HIDInterface lightstone;
+typedef HIDInterface* lightstone;
 #else
 #include <windows.h>
 typedef HANDLE lightstone;
@@ -30,10 +30,10 @@ typedef struct
 	float hrv;
 	float scl;
 } lightstone_info;
-
+extern "C" {
 int lightstone_get_count();
 int lightstone_open(lightstone* dev, unsigned int device_index);
 int lightstone_close(lightstone dev);
 lightstone_info lightstone_get_info(lightstone dev);
-
+}
 #endif //LIBTRANCEVIBE_H
