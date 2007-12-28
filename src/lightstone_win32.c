@@ -316,14 +316,16 @@ lightstone_info lightstone_get_info(lightstone DeviceHandle)
 		char message_started = 0;
 		int char_count = 0;
 		int ii;
-		while(1)
+		LONG Result = 1;
+		while(Result)
 		{
-			LONG Result = ReadFile 
+			Result = ReadFile 
 			(DeviceHandle, 
 			InputReport, 
 			Capabilities.InputReportByteLength, 
 			&NumberOfBytesRead,
 			NULL); 
+			printf("%d\n", Result);
 			if(NumberOfBytesRead > 0)
 			{
 				for(ii = 2; ii < InputReport[1]+2; ++ii)
