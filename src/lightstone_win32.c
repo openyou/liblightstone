@@ -102,14 +102,11 @@ int lightstone_open(lightstone* DeviceHandle, unsigned int device_index)
 	//Use a series of API calls to find a HID with a specified Vendor IF and Product ID.
 
 	HIDD_ATTRIBUTES						Attributes;
-	DWORD								DeviceUsage;
 	SP_DEVICE_INTERFACE_DATA			devInfoData;
 	BOOL								LastDevice = FALSE;
 	int									MemberIndex = 0;
 	LONG								Result;	
-	char*								UsageDescription;
 	
-
 	Length = 0;
 	detailData = NULL;
 	*DeviceHandle = NULL;
