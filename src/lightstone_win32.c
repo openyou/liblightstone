@@ -7,6 +7,8 @@
  *
  * Sourceforge project @ http://www.sourceforge.net/projects/liblightstone/
  *
+ * Win32 code adapted from Lightstone Monitor (http://sourceforge.net/projects/lsm/)
+ *
  * This library is covered by the MIT License
  * Read LICENSE_MIT.txt for details.
  */
@@ -91,14 +93,10 @@ void GetDeviceCapabilities(HANDLE DeviceHandle)
 	HidD_FreePreparsedData(PreparsedData);
 }
 
-int lightstone_get_count()
-{
-	return 0;
-}
 
-int lightstone_open(lightstone* DeviceHandle, unsigned int device_index)
+
+int lightstone_open_win32(lightstone* DeviceHandle, unsigned int device_index, int get_count)
 {	
-		
 	//Use a series of API calls to find a HID with a specified Vendor IF and Product ID.
 
 	HIDD_ATTRIBUTES						Attributes;
@@ -106,7 +104,8 @@ int lightstone_open(lightstone* DeviceHandle, unsigned int device_index)
 	BOOL								LastDevice = FALSE;
 	int									MemberIndex = 0;
 	LONG								Result;	
-	
+	int									device_count = 0;	
+
 	Length = 0;
 	detailData = NULL;
 	*DeviceHandle = NULL;
@@ -253,62 +252,51 @@ int lightstone_open(lightstone* DeviceHandle, unsigned int device_index)
 
 			MyDeviceDetected = FALSE;
 			
-
-			if (Attributes.VendorID == LIGHTSTONE_VID)
+			if (Attributes.VendorID == LIGHTSTONE_VID && Attributes.ProductID == LIGHTSTONE_PID)
 			{
-				if (Attributes.ProductID == LIGHTSTONE_PID)
+				if(get_count)
 				{
-					//Both the Vendor ID and Product ID match.
+					++device_count;
+					CloseHandle(*DeviceHandle);
+				}
+				else
+				{
 					MyDeviceDetected = TRUE;
 					MyDevicePathName = detailData->DevicePath;
 					GetDeviceCapabilities(*DeviceHandle);
-
-				} //if (Attributes.ProductID == ProductID)
-
-				else
-					//The Product ID doesn't match.
-
-					CloseHandle(*DeviceHandle);
-
-			} //if (Attributes.VendorID == VendorID)
-
+					break;
+				}
+			}
 			else
-				//The Vendor ID doesn't match.
-
+			{
 				CloseHandle(*DeviceHandle);
-
-		//Free the memory used by the detailData structure (no longer needed).
-
-		free(detailData);
-
+			}
+			free(detailData);
 		}  //if (Result != 0)
 
 		else
-			//SetupDiEnumDeviceInterfaces returned 0, so there are no more devices to check.
-
+		{
 			LastDevice=TRUE;
-
+		}
 		//If we haven't found the device yet, and haven't tried every available device,
 		//try the next one.
-
 		MemberIndex = MemberIndex + 1;
-
-	} //do
-
-	while ((LastDevice == FALSE) && (MyDeviceDetected == FALSE));
-
-	/*
-	if (MyDeviceDetected == FALSE)
-		DisplayData("Device not detected");
-	else
-		DisplayData("Device detected");
-*/
-	//Free the memory reserved for hDevInfo by SetupDiClassDevs.
-
+	}
+	while (!LastDevice);
 	SetupDiDestroyDeviceInfoList(hDevInfo);
-//	DisplayLastError("SetupDiDestroyDeviceInfoList");
-
+	if(get_count) return device_count;
 	return MyDeviceDetected;
+}
+
+int lightstone_get_count()
+{
+	lightstone test;
+	return lightstone_open_win32(&test, 0, 1);
+}
+
+int lightstone_open(lightstone* DeviceHandle, unsigned int device_index)
+{
+	return lightstone_open_win32(DeviceHandle, device_index, 0);
 }
 
 int lightstone_close(lightstone DeviceHandle)
