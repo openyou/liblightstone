@@ -342,8 +342,8 @@ lightstone_info lightstone_get_info(lightstone DeviceHandle)
 						rawAscii[char_count] = 0;
 						if ( strlen(rawAscii) > 18) 
 						{
-							ret.hrv = ((float)(((hex2dec(rawAscii+5,2)) << 8) | (hex2dec(rawAscii+7,2)))) * .01;
-							ret.scl = ((float)(((hex2dec(rawAscii+10,2)) << 8) | (hex2dec(rawAscii+12,2)))) * .001;
+							ret.scl = ((float)(((hex2dec(rawAscii+5,2)) << 8) | (hex2dec(rawAscii+7,2)))) * .01;
+							ret.hrv = ((float)(((hex2dec(rawAscii+10,2)) << 8) | (hex2dec(rawAscii+12,2)))) * .001;
 							return ret;
 						}
 						message_started = 0;

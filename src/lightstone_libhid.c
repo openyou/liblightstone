@@ -95,7 +95,6 @@ lightstone_info lightstone_get_info(lightstone dev)
 
 			if( t == HID_RET_SUCCESS )
 			{
-				//printf("Writing %d bytes\n", InputReport[0]+1);
 				for(ii = 1; ii < InputReport[0]+1; ++ii)
 				{
 					if(!message_started && InputReport[ii] != '<') continue;
@@ -110,9 +109,8 @@ lightstone_info lightstone_get_info(lightstone dev)
 						rawAscii[char_count] = 0;
 						if ( strlen(rawAscii) > 18) 
 						{
-							printf("%s\n", rawAscii);
-							ret.hrv = ((float)(((hex2dec(rawAscii+5,2)) << 8) | (hex2dec(rawAscii+7,2)))) * .01;
-							ret.scl = ((float)(((hex2dec(rawAscii+10,2)) << 8) | (hex2dec(rawAscii+12,2)))) * .001;
+							ret.scl = ((float)(((hex2dec(rawAscii+5,2)) << 8) | (hex2dec(rawAscii+7,2)))) * .01;
+							ret.hrv = ((float)(((hex2dec(rawAscii+10,2)) << 8) | (hex2dec(rawAscii+12,2)))) * .001;
 							return ret;
 						}
 						message_started = 0;
