@@ -1,22 +1,49 @@
 #include "lightstone.h"
+#include <stdio.h>
+#include <string.h>
+#include "usb.h"
+
+char gIsInitialized = 0;
+
+void lightstone_init_usb()
+{
+	if(gIsInitialized) usb_init();
+    usb_find_busses();
+    usb_find_devices();
+	gIsInitialized = 1;
+}
 
 int lightstone_get_count()
 {
-	return 0;
+	int device_count = 0;	
+	struct usb_bus* bus;
+	struct usb_device* dev;
+
+	//We re-run init on every get count, just in case new hubs/devices have been added
+	lightstone_init_usb();
+	for (bus = usb_get_busses(); bus != 0; bus = bus->next) 
+	{			
+		for (dev = bus->devices; dev != 0; dev = dev->next) 
+		{	
+			if (dev->descriptor.idVendor == LIGHTSTONE_VID && dev->descriptor.idProduct == LIGHTSTONE_PID)
+			{
+				++device_count;
+			}
+		}
+	}
+	return device_count;
 }
 
 int lightstone_open(lightstone* dev, unsigned int device_index)
 {	
 	int i;
 	hid_return ret;
-	HIDInterfaceMatcher matcher;
+	HIDInterfaceMatcher matcher = {LIGHTSTONE_VID, LIGHTSTONE_PID, NULL, NULL, 0};
+	lightstone_init_usb();
+
 	ret = hid_init();
 
 	*dev = hid_new_HIDInterface();
-	matcher.vendor_id = LIGHTSTONE_VID;
-	matcher.product_id = LIGHTSTONE_PID;
-	matcher.matcher_fn = NULL;
-
 	/* open recursively all HID devices found */
 	while ( (ret = hid_force_open(*dev, 0, &matcher, 3)) != HID_RET_DEVICE_NOT_FOUND)
 	{

@@ -285,7 +285,8 @@ int lightstone_open_win32(lightstone* DeviceHandle, unsigned int device_index, i
 	while (!LastDevice);
 	SetupDiDestroyDeviceInfoList(hDevInfo);
 	if(get_count) return device_count;
-	return MyDeviceDetected;
+	if(MyDeviceDetected) return 0;
+	return -1;
 }
 
 int lightstone_get_count()
@@ -325,7 +326,6 @@ lightstone_info lightstone_get_info(lightstone DeviceHandle)
 			Capabilities.InputReportByteLength, 
 			&NumberOfBytesRead,
 			NULL); 
-			printf("%d\n", Result);
 			if(NumberOfBytesRead > 0)
 			{
 				for(ii = 2; ii < InputReport[1]+2; ++ii)
@@ -353,5 +353,5 @@ lightstone_info lightstone_get_info(lightstone DeviceHandle)
 			}
 		}
 	}
-	return ret;
+	return -1;
 }
