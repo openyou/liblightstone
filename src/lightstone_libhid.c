@@ -79,8 +79,8 @@ lightstone_info lightstone_get_info(lightstone dev)
 {
 	lightstone_info ret;
 	hid_return t;
-	ret.hrv = 0;
-	ret.scl = 0;
+	ret.hrv = -1;
+	ret.scl = -1;
 	//	if (DeviceHandle != INVALID_HANDLE_VALUE)
 	{
 		int NumberOfBytesRead;

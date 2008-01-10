@@ -1,0 +1,5 @@
+liblightstone ChangeLog
+=======================
+
+2008-01-09 Kyle Machulis <kyle@nonpolynomial.com>
+	* First release of liblightstone project, includes source files and windows/cmake build system
