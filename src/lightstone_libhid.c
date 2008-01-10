@@ -7,7 +7,7 @@ char gIsInitialized = 0;
 
 void lightstone_init_usb()
 {
-	if(gIsInitialized) usb_init();
+	if(!gIsInitialized) usb_init();
     usb_find_busses();
     usb_find_devices();
 	gIsInitialized = 1;
