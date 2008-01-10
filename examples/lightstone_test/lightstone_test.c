@@ -31,6 +31,10 @@ int main(int argc, char** argv)
 	while(1)
 	{
 		r = lightstone_get_info(test);
+		if(r.hrv < 0) 
+		{
+			printf("Error reading lightstone, shutting down!\n");
+		}
 		printf ("%f %f\n", r.hrv, r.scl);
 	}
 	return 0;

@@ -309,8 +309,8 @@ int lightstone_close(lightstone DeviceHandle)
 lightstone_info lightstone_get_info(lightstone DeviceHandle)
 {
 	lightstone_info ret;
-	ret.hrv = 0;
-	ret.scl = 0;
+	ret.hrv = -1;
+	ret.scl = -1;
 	if (DeviceHandle != INVALID_HANDLE_VALUE)
 	{
 		char rawAscii[30];
@@ -353,5 +353,5 @@ lightstone_info lightstone_get_info(lightstone DeviceHandle)
 			}
 		}
 	}
-	return -1;
+	return ret;
 }
