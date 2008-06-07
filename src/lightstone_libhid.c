@@ -25,7 +25,7 @@ int lightstone_get_count()
 	{			
 		for (dev = bus->devices; dev != 0; dev = dev->next) 
 		{	
-			if (dev->descriptor.idVendor == LIGHTSTONE_VID && dev->descriptor.idProduct == LIGHTSTONE_PID)
+			if ((dev->descriptor.idVendor == LIGHTSTONE_VID && dev->descriptor.idProduct == LIGHTSTONE_PID) || (dev->descriptor.idVendor == LIGHTSTONE_VID_2 && dev->descriptor.idProduct == LIGHTSTONE_PID_2) )
 			{
 				++device_count;
 			}
@@ -39,6 +39,8 @@ int lightstone_open(lightstone* dev, unsigned int device_index)
 	int i;
 	hid_return ret;
 	HIDInterfaceMatcher matcher = {LIGHTSTONE_VID, LIGHTSTONE_PID, NULL, NULL, 0};
+	HIDInterfaceMatcher matcher2 = {LIGHTSTONE_VID_2, LIGHTSTONE_PID_2, NULL, NULL, 0};
+
 	lightstone_init_usb();
 
 	ret = hid_init();
@@ -49,6 +51,11 @@ int lightstone_open(lightstone* dev, unsigned int device_index)
 	{
 		return ret;
 	}
+	while ( (ret = hid_force_open(*dev, 0, &matcher2, 3)) != HID_RET_DEVICE_NOT_FOUND)
+	{
+		return ret;
+	}
+
 	return 0;
 }
 

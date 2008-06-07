@@ -252,7 +252,7 @@ int lightstone_open_win32(lightstone* DeviceHandle, unsigned int device_index, i
 
 			MyDeviceDetected = FALSE;
 			
-			if (Attributes.VendorID == LIGHTSTONE_VID && Attributes.ProductID == LIGHTSTONE_PID)
+			if ((Attributes.VendorID == LIGHTSTONE_VID && Attributes.ProductID == LIGHTSTONE_PID) || (Attributes.VendorID == LIGHTSTONE_VID_2 && Attributes.ProductID == LIGHTSTONE_PID_2) )
 			{
 				if(get_count)
 				{

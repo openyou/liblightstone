@@ -17,6 +17,10 @@
 #define LIGHTSTONE_VID 0x0483
 #define LIGHTSTONE_PID 0x0035
 
+//VID/PID for different Lightstone
+#define LIGHTSTONE_VID_2 0x14FA
+#define LIGHTSTONE_PID_2 0x0001
+
 #ifdef USE_LIBHID
 #include <hid.h>
 typedef HIDInterface* lightstone;
