@@ -36,9 +36,18 @@ typedef struct
 } lightstone_info;
 
 
-int lightstone_get_count();
-int lightstone_open(lightstone* dev, unsigned int device_index);
-int lightstone_close(lightstone dev);
-lightstone_info lightstone_get_info(lightstone dev);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif //LIBTRANCEVIBE_H
+	int lightstone_get_count();
+	int lightstone_open(lightstone* dev, unsigned int device_index);
+	int lightstone_close(lightstone dev);
+	lightstone_info lightstone_get_info(lightstone dev);
+	
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif //LIBLIGHTSTONE_H
