@@ -24,9 +24,12 @@
 #ifdef USE_LIBHID
 #include <hid.h>
 typedef HIDInterface* lightstone;
-#else
+#elif USE_WIN32
 #include <windows.h>
 typedef HANDLE lightstone;
+#else
+#include "nputil_libusb1.h"
+typedef nputil_libusb1_struct lightstone;
 #endif
 
 typedef struct
@@ -35,15 +38,16 @@ typedef struct
 	float scl;
 } lightstone_info;
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	int lightstone_get_count();
+	lightstone* lightstone_create();
+	void lightstone_delete();
+	int lightstone_get_count(lightstone* dev);
 	int lightstone_open(lightstone* dev, unsigned int device_index);
-	int lightstone_close(lightstone dev);
-	lightstone_info lightstone_get_info(lightstone dev);
+	void lightstone_close(lightstone* dev);
+	lightstone_info lightstone_get_info(lightstone* dev);
 	
 #ifdef __cplusplus
 }

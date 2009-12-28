@@ -2,13 +2,14 @@
 # Build function for liblightstone_test
 ######################################################################################
 
-SET(SRCS liblightstone_test/liblightstone_test.c)
+SET(SRCS lightstone_test/lightstone_test.c)
+SET(LIBS  ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} hid)
 
 BUILDSYS_BUILD_EXE(
-  NAME liblightstone_test
+  NAME lightstone_test
   SOURCES "${SRCS}" 
   CXX_FLAGS FALSE
-  LINK_LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS}
+  LINK_LIBS "${LIBS}"
   LINK_FLAGS FALSE 
   DEPENDS ${liblightstone_LIBRARY}_DEPEND
   SHOULD_INSTALL TRUE

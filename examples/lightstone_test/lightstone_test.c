@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv)
 {
-	lightstone test = NULL;
+	lightstone* test = lightstone_create();
 	lightstone_info r;
 	int ret;
 
@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 	//hid_set_usb_debug(0);
 	//#endif USE_LIBHID
 	
-	ret = lightstone_get_count(&test, 0);
+	ret = lightstone_get_count(test);
 
 	if(!ret)
 	{
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	printf("Found %d Lightstones\n", ret);
-	ret = lightstone_open(&test, 0);
+	ret = lightstone_open(test, 0);
 	if(ret < 0)
 	{
 		printf("Cannot open lightstone!\n");
@@ -37,5 +37,6 @@ int main(int argc, char** argv)
 		}
 		printf ("%f %f\n", r.hrv, r.scl);
 	}
+	lightstone_delete(test);
 	return 0;
 }
