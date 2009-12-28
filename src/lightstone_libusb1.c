@@ -1,3 +1,14 @@
+/***
+ * @file lightstone_libusb1.c
+ * @brief LibUSB based implementation of lightstone communication
+ * @author Kyle Machulis (kyle@nonpolynomial.com)
+ * @copyright (c) 2006-2009 Nonpolynomial Labs/Kyle Machulis
+ * @license BSD License
+ *
+ * Project info at http://liblightstone.nonpolynomial.com/
+ *
+ */
+
 #include "lightstone.h"
 #include <stdio.h>
 #include <string.h>
@@ -25,31 +36,13 @@ int lightstone_get_count(lightstone* d)
 int lightstone_open(lightstone* dev, unsigned int device_index)
 {
 	char buffer[9];
-	int len;
-	nputil_libusb1_open(dev, LIGHTSTONE_VID, LIGHTSTONE_PID, device_index);	
-
-	len = libusb_get_descriptor(dev->_device,
-								 LIBUSB_DT_HID,
-								 0,
-								 (char*)buffer,
-								 9);
-	
-	if (len < 0) {
-		printf("Cannot get descriptor!");
-		return -1;
+	int ret;
+	if((ret = nputil_libusb1_open(dev, LIGHTSTONE_VID, LIGHTSTONE_PID, device_index)) < 0)
+	{
+		return ret;
 	}
-	
-	len = libusb_get_descriptor(dev->_device,
-								 LIBUSB_DT_REPORT,
-								 0,
-								 (char*)buffer,
-								 9);
-
-	if (len < 0) {
-		printf("Cannot get report!");
-		return -1;
-	}
-
+	libusb_claim_interface(dev->_device, 0);
+	return 0;
 }
 
 void lightstone_close(lightstone* dev)
@@ -84,7 +77,7 @@ lightstone_info lightstone_get_info(lightstone* dev)
 	{
 		int NumberOfBytesRead;
 		char rawAscii[300];
-		char InputReport[256];
+		unsigned char InputReport[256];
 		char message_started = 0;
 		int transferred = 0;
 		int char_count = 0;
@@ -92,19 +85,8 @@ lightstone_info lightstone_get_info(lightstone* dev)
 		int t;
 		while(1)
 		{
-			//t = hid_interrupt_read(dev,0x81,InputReport,0x8,10);
-			//t = libusb_interrupt_transfer(dev->_device, 0x81, InputReport, 8, &transferred, 0x10);
-			t = libusb_control_transfer(dev->_device,
-										0x81 + LIBUSB_REQUEST_TYPE_CLASS + LIBUSB_RECIPIENT_INTERFACE,
-										0x01, //HID_REPORT_GET
-										0 + (0x03 << 8), //HID_RT_FEATURE
-										1,
-										InputReport,
-										0x8,
-										0x10);
-
-			//if( t == HID_RET_SUCCESS )
-			if(t == 0x8)
+			t = libusb_interrupt_transfer(dev->_device, 0x81, InputReport, 8, &transferred, 0x10);
+			if(transferred == 0x8)
 			{
 				for(ii = 1; ii < InputReport[0]+1; ++ii)
 				{
@@ -128,11 +110,6 @@ lightstone_info lightstone_get_info(lightstone* dev)
 						char_count = 0;
 					}
 				}
-				printf("Transferred! %d %d\n", transferred, t);
-			}
-			else
-			{
-				printf("Not enough transferred! %d %d\n", transferred, t);
 			}
 		}
 	}

@@ -1,14 +1,12 @@
-/*
- * Declaration file for Lightstone User Space Driver
+/***
+ * @file lightstone.h
+ * @brief Implementation of lightstone communication
+ * @author Kyle Machulis (kyle@nonpolynomial.com)
+ * @copyright (c) 2007-2009 Nonpolynomial Labs/Kyle Machulis
+ * @license BSD License
  *
- * Copyright (c) 2007-2008 Kyle Machulis/Nonpolynomial Labs <kyle@nonpolynomial.com>
+ * Project info at http://liblightstone.nonpolynomial.com/
  *
- * More info on Nonpolynomial Labs @ http://www.nonpolynomial.com
- *
- * Sourceforge project @ http://www.sourceforge.net/projects/liblightstone/
- *
- * This library is covered by the MIT License (Win32 Version) or GPLv2 (LibHID Version)
- * Read LICENSE_MIT.txt or LICENSE_GPL.txt for details.
  */
 
 #ifndef LIBLIGHTSTONE_H
@@ -21,10 +19,7 @@
 #define LIGHTSTONE_VID_2 0x14FA
 #define LIGHTSTONE_PID_2 0x0001
 
-#ifdef USE_LIBHID
-#include <hid.h>
-typedef HIDInterface* lightstone;
-#elif USE_WIN32
+#if USE_WIN32
 #include <windows.h>
 typedef HANDLE lightstone;
 #else
