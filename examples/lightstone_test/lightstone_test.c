@@ -8,11 +8,11 @@ int main(int argc, char** argv)
 	int ret;
 
     //Uncomment for libhid debug messages
-	//#ifdef USE_LIBHID
-	//hid_set_debug(HID_DEBUG_ALL);
-	//hid_set_debug_stream(stderr);
-	//hid_set_usb_debug(0);
-	//#endif USE_LIBHID
+//#ifdef USE_LIBHID
+	hid_set_debug(HID_DEBUG_ALL);
+	hid_set_debug_stream(stderr);
+	hid_set_usb_debug(0);
+//#endif USE_LIBHID
 	
 	ret = lightstone_get_count(&test, 0);
 
