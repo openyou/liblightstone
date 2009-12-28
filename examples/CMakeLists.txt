@@ -3,7 +3,7 @@
 ######################################################################################
 
 SET(SRCS lightstone_test/lightstone_test.c)
-SET(LIBS  ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} hid)
+SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS})
 
 BUILDSYS_BUILD_EXE(
   NAME lightstone_test
