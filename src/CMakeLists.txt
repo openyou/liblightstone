@@ -1,21 +1,16 @@
+######################################################################################
+# Build function for main library
+######################################################################################
+
 SET(SRCS lightstone_libhid.c)
-ADD_LIBRARY(lightstone STATIC ${SRCS})
-ADD_LIBRARY(lightstone_dynamic SHARED ${SRCS})
-SET_TARGET_PROPERTIES(lightstone PROPERTIES COMPILE_FLAGS "-DUSE_LIBHID")
-SET_TARGET_PROPERTIES(lightstone PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES COMPILE_FLAGS "-DUSE_LIBHID")
-SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES OUTPUT_NAME "lightstone")
-SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES VERSION ${LIBLSVERSION})
-TARGET_LINK_LIBRARIES(lightstone ${LIBUSBNAME} ${LIBHIDNAME})
-TARGET_LINK_LIBRARIES(lightstone_dynamic ${LIBUSBNAME} ${LIBHIDNAME})
-IF(NOT WIN32)
-  INSTALL(TARGETS lightstone lightstone_dynamic LIBRARY DESTINATION "/usr/local/lib" ARCHIVE DESTINATION "/usr/local/lib")
-  INSTALL(FILES lightstone.h DESTINATION "/usr/local/include")
-  IF(APPLE)
-	SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES INSTALL_NAME_DIR "/usr/local/lib")
-	SET_TARGET_PROPERTIES(lightstone_dynamic PROPERTIES LINK_FLAGS "-compatibility_version 1.0.0 -current_version 1.${LIBLSVERSION}")
-  ENDIF(APPLE)
-ENDIF(NOT WIN32)
 
-
+BUILDSYS_BUILD_LIB(
+  NAME lightstone
+  SOURCES "${SRCS}" 
+  CXX_FLAGS "-DUSE_LIBHID"
+  LINK_LIBS ${LIBLIGHTSTONE_DEP_LIBS}
+  LINK_FLAGS FALSE
+  DEPENDS FALSE
+  SHOULD_INSTALL TRUE
+  VERSION "${LIBLIGHTSTONE_VERSION}"
+  )
