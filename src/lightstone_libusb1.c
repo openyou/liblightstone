@@ -42,6 +42,10 @@ int lightstone_open(lightstone* dev, unsigned int device_index)
 	{
 		return ret;
 	}
+	if(libusb_kernel_driver_active(dev->_device, 0))
+	{
+		libusb_detach_kernel_driver(dev->_device, 0);
+	}
 	libusb_claim_interface(dev->_device, 0);
 	return 0;
 }
