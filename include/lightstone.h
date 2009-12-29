@@ -19,11 +19,23 @@
 #define LIGHTSTONE_VID_2 0x14FA
 #define LIGHTSTONE_PID_2 0x0001
 
-#if USE_WIN32
+#if defined(WIN32)
 #include <windows.h>
 typedef HANDLE lightstone;
 #else
-#include "nputil_libusb1.h"
+
+#if !defined(NPUTIL_LIBUSB1_STRUCT)
+#define NPUTIL_LIBUSB1_STRUCT
+#include "libusb.h"
+typedef struct {
+	struct libusb_context* _context;
+	struct libusb_device_handle* _device;
+	struct libusb_transfer* _in_transfer;
+	struct libusb_transfer* _out_transfer;
+	int _is_open;
+	int _is_inited;
+} nputil_libusb1_struct;
+#endif
 typedef nputil_libusb1_struct lightstone;
 #endif
 
@@ -38,7 +50,7 @@ extern "C" {
 #endif
 
 	lightstone* lightstone_create();
-	void lightstone_delete();
+	void lightstone_delete(lightstone* dev);
 	int lightstone_get_count(lightstone* dev);
 	int lightstone_open(lightstone* dev, unsigned int device_index);
 	void lightstone_close(lightstone* dev);
@@ -47,6 +59,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif //LIBLIGHTSTONE_H

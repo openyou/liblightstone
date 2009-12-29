@@ -11,6 +11,8 @@ Description
 
 This is a C-based development library for the Lightstone, a Biometric USB device distributed with the Journey to Wild Divine Relaxation Software (http://www.wilddivine.com)
 
+liblightstone is released under the BSD License.
+
 ======================
 Lightstone Information
 ======================

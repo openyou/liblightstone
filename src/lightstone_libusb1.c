@@ -10,6 +10,7 @@
  */
 
 #include "lightstone.h"
+#include "nputil_libusb1.h"
 #include <stdio.h>
 #include <string.h>
 

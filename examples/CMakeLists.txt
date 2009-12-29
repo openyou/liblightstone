@@ -3,7 +3,7 @@
 ######################################################################################
 
 SET(SRCS lightstone_test/lightstone_test.c)
-SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS})
+SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} trancevibe)
 
 BUILDSYS_BUILD_EXE(
   NAME lightstone_test
