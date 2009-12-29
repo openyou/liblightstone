@@ -3,7 +3,8 @@
 ######################################################################################
 
 IF(NOT WIN32)
-  SET(SRCS lightstone_libusb1.c nputil_libusb1.c)
+  INCLUDE_DIRECTORIES(../libnputil/include/)
+  SET(SRCS lightstone_libusb1.c ../libnputil/src/nputil_libusb1.c)
 
   BUILDSYS_BUILD_LIB(
     NAME lightstone

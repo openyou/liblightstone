@@ -1,4 +1,15 @@
-#include "lightstone.h"
+/***
+ * @file lightstone_test.c
+ * @brief Tests lightstone connection and communication
+ * @author Kyle Machulis (kyle@nonpolynomial.com)
+ * @copyright (c) 2006-2009 Nonpolynomial Labs/Kyle Machulis
+ * @license BSD License
+ *
+ * Project info at http://liblightstone.nonpolynomial.com/
+ *
+ */
+
+#include "lightstone/lightstone.h"
 #include <stdio.h>
 
 int main(int argc, char** argv)

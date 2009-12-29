@@ -1,0 +1,3 @@
+[submodule "libnputil"]
+	path = libnputil
+	url = git://github.com/qdot/libnputil.git
