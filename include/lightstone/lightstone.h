@@ -26,7 +26,7 @@ typedef HANDLE lightstone;
 
 #if !defined(NPUTIL_LIBUSB1_STRUCT)
 #define NPUTIL_LIBUSB1_STRUCT
-#include "libusb.h"
+#include "libusb-1.0/libusb.h"
 typedef struct {
 	struct libusb_context* _context;
 	struct libusb_device_handle* _device;
