@@ -2,10 +2,11 @@ liblightstone ChangeLog
 =======================
 
 2009-12-28 Kyle Machulis <kyle@nonpolynomial.com>
-	* Released Version 1.0
-	* Added simple libusb based python class
+	* Released Version 0.9.0
+	* Added simple pyusb-1.0 based python class
 	* Updated to use compily_buildd build system
 	* Removed libhid bindings
+	* Removed win32 DDK bindings
 	* Added libusb-1.0 bindings through libnputil
 	* Changed license from MIT/GPL (due to libhid) to pure BSD
 	* Updated extension instructions for OS X 10.6
