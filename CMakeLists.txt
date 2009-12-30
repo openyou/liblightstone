@@ -46,9 +46,7 @@ OPTION_LIBRARY_BUILD_STATIC(ON)
 IF(NOT MSVC)
   OPTION_LIBRARY_BUILD_SHARED(ON)
 ENDIF(NOT MSVC)
-OPTION_FAST_MATH(ON)
 OPTION_ARCH_OPTS(ON)
-OPTION_GPROF(OFF)
 
 #Project specific options
 OPTION(BUILD_EXAMPLES "Build liblightstone examples" ON)
@@ -57,19 +55,9 @@ OPTION(BUILD_EXAMPLES "Build liblightstone examples" ON)
 # Project specific package finding
 ######################################################################################
 
-# IF(NOT WIN32)
-#   FIND_PACKAGE(libusb-1.0 REQUIRED)
-#   INCLUDE_DIRECTORIES(${LIBUSB_1_INCLUDE_DIRS})
-#   SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_1_LIBRARIES})
-# ELSE()
-# ENDIF()
-IF(NOT WIN32)
-  #FIND_PACKAGE(libhid REQUIRED)
-  FIND_PACKAGE(libusb REQUIRED)
-  INCLUDE_DIRECTORIES(${LIBUSB_INCLUDE_DIRS})
-  SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_LIBRARIES} hid)
-ENDIF()
-
+FIND_PACKAGE(libusb-1.0 REQUIRED)
+INCLUDE_DIRECTORIES(${LIBUSB_1_INCLUDE_DIRS})
+SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_1_LIBRARIES})
 
 ######################################################################################
 # Project specific globals
@@ -107,5 +95,6 @@ IF(BUILD_STATIC AND APPLE)
   LIST(APPEND LIBLIGHTSTONE_DEP_LIBS "-framework IOKit" "-framework CoreFoundation")
 ENDIF(BUILD_STATIC AND APPLE)
 
+ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(examples)
