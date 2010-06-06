@@ -55,9 +55,15 @@ OPTION(BUILD_EXAMPLES "Build liblightstone examples" ON)
 # Project specific package finding
 ######################################################################################
 
-FIND_PACKAGE(libusb-1.0 REQUIRED)
-INCLUDE_DIRECTORIES(${LIBUSB_1_INCLUDE_DIRS})
-SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_1_LIBRARIES})
+IF(NOT WIN32)
+  FIND_PACKAGE(libusb-1.0 REQUIRED)
+  INCLUDE_DIRECTORIES(${LIBUSB_1_INCLUDE_DIRS})
+  SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_1_LIBRARIES})
+ELSE()
+  SET(WDK_PATH CACHE PATH "Path to WDK Installation")
+  INCLUDE_DIRECTORIES(${WDK_PATH}/inc/api ${WDK_PATH}/inc/crt ${WDK_PATH}/inc)
+  LINK_DIRECTORIES(${WDK_PATH}/lib/wxp/i386)
+ENDIF()
 
 ######################################################################################
 # Project specific globals
@@ -65,8 +71,8 @@ SET(LIBLIGHTSTONE_DEP_LIBS ${LIBUSB_1_LIBRARIES})
 
 #library definitions
 
-SET(LIBLIGHTSTONE_MAJOR_VERSION 0)
-SET(LIBLIGHTSTONE_MINOR_VERSION 5)
+SET(LIBLIGHTSTONE_MAJOR_VERSION 1)
+SET(LIBLIGHTSTONE_MINOR_VERSION 0)
 SET(LIBLIGHTSTONE_BUILD_VERSION 0)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

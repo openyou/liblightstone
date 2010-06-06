@@ -12,17 +12,21 @@
 #ifndef LIBLIGHTSTONE_H
 #define LIBLIGHTSTONE_H
 
-#define LIGHTSTONE_VID 0x0483
-#define LIGHTSTONE_PID 0x0035
-
-//VID/PID for different Lightstone
-#define LIGHTSTONE_VID_2 0x14FA
-#define LIGHTSTONE_PID_2 0x0001
+#define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
+unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
 #if defined(WIN32)
-#include <windows.h>
-typedef HANDLE lightstone;
-#else
+#if !defined(NPUTIL_WIN32_HID_STRUCT)
+#define NPUTIL_WIN32_HID_STRUCT
+typedef struct {
+	HANDLE* _device;
+	int _is_open;
+	int _is_inited;
+} nputil_win32hid_struct;
+#endif
+typedef nputil_win32_struct lightstone;
+
+#else //Non-Win32 platforms
 
 #if !defined(NPUTIL_LIBUSB1_STRUCT)
 #define NPUTIL_LIBUSB1_STRUCT
@@ -51,9 +55,17 @@ extern "C" {
 
 	lightstone* lightstone_create();
 	void lightstone_delete(lightstone* dev);
+	
 	int lightstone_get_count(lightstone* dev);
+	int lightstone_get_count_vid_pid(lightstone* dev, unsigned int vendor_id, unsigned int product_id);
+	
 	int lightstone_open(lightstone* dev, unsigned int device_index);
+	int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id);
+
 	void lightstone_close(lightstone* dev);
+	int lightstone_valid(lightstone* dev);
+
+	int lightstone_read(lightstone* dev, unsigned char *report, unsigned int report_length);
 	lightstone_info lightstone_get_info(lightstone* dev);
 	
 #ifdef __cplusplus
