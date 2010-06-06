@@ -21,37 +21,40 @@ More information about the Lightstone internals and protocol can be found at
 
 http://wiki.nonpolynomial.com/Lightstone
 
-====================
-Library Requirements
-====================
+=======================
+A Tale of Two Libraries
+=======================
 
-For C Driver:
+liblightstone comes in two flavors: Win32 and libusb-1.0. The Win32 version uses direct Win32 DDK calls to access the windows HID system, and reads raw reports from there. libusb-1.0 works for all platforms currently supporting the library. As of this writing (late December 2009), the libusb-1.0 version of liblightstone has been tested on OS X and linux, and will be on windows once the WinUSB layer is finished.
 
-- libusb-1.0: http://www.libusb.org
-- cmake (2.6 or higher): http://www.cmake.org
+======================================
+Library Requirements (For Compilation)
+======================================
 
-For Python Driver:
+-----
+Win32
+-----
 
-- pyusb 1.0+ (Only available through sourceforge svn trunk at the moment): http://pyusb.berlios.de/ 
+(Visual Studio 2005 solution files provided)
+
+Windows DDK: http://www.microsoft.com/whdc/devtools/ddk/default.msxp
+
+----------
+libusb-1.0
+----------
+
+(cmake cross-platform build files provided)
+
+libusb-1.0: http://www.libusb.org
+
+cmake: http://www.cmake.org
 
 ==============================
 Notes on Compilation and Usage
 ==============================
 
--------
-Windows
--------
-
-As of version 0.9.0 of liblightstone, I can no longer get the Windows DDK version to compile. I don't know if there was a change from the DDK to WDK that caused this or what, but I don't really feel like debugging windows DDK code when the winusb libusb-1.0 branch is progressing. So, for the 0.9.0 version only, consider windows support dropped. The only thing holding liblightstone back from 1.0 is the winusb calls in libusb-1.0, so once that's out, I'll put in the win32 fixes for cmake and roll the version number to 1.0. Until then, use the older version.
-
 --------
 Mac OS X
 --------
 
-Assuming you have not installed the Journey to Wild Divine software and are not installing the dmg version of liblightstone, you will need to install the "Lightstone OS X Extension" in order to use the lightstone on OS X. The file and installation instructions are available on the liblightstone sourceforge site:
-
-http://is.gd/5GjW7
-
-Note that there are two different version of the kext, one for 10.4 and earlier, and the other for 10.5 and later.
-
-
+Assuming you have not installed the Journey to Wild Divine software and are not installing the dmg version of liblightstone, you will need to install the "Lightstone OS X Extension" in order to use the lightstone on OS X. The file and installation instructions are available on the liblightstone sourceforge site. Note that there are two different version of the kext, one for 10.4 and earlier, and the other for 10.5 and later.

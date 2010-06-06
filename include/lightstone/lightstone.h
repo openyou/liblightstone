@@ -19,6 +19,11 @@
 #define LIGHTSTONE_VID_2 0x14FA
 #define LIGHTSTONE_PID_2 0x0001
 
+#if defined(WIN32)
+#include <windows.h>
+typedef HANDLE lightstone;
+#else
+
 #if !defined(NPUTIL_LIBUSB1_STRUCT)
 #define NPUTIL_LIBUSB1_STRUCT
 #include "libusb-1.0/libusb.h"
@@ -32,6 +37,7 @@ typedef struct {
 } nputil_libusb1_struct;
 #endif
 typedef nputil_libusb1_struct lightstone;
+#endif
 
 typedef struct
 {
