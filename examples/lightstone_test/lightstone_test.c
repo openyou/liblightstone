@@ -45,6 +45,7 @@ int main(int argc, char** argv)
 		if(r.hrv < 0) 
 		{
 			printf("Error reading lightstone, shutting down!\n");
+			break;
 		}
 		printf ("%f %f\n", r.hrv, r.scl);
 	}

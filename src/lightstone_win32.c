@@ -13,12 +13,14 @@
  * Read LICENSE_MIT.txt for details.
  */
 
-#include "lightstone.h"
-#include "nputil_win32hid.h"
+#include "lightstone/lightstone.h"
+#include "nputil/nputil_win32hid.h"
 
-int lightstone_get_count(lightstone* dev, unsigned int vendor_id, unsigned int product_id)
+#include "lightstone.c"
+
+int lightstone_get_count_vid_pid(lightstone* dev, unsigned int vendor_id, unsigned int product_id)
 {
-	return nputil_win32hid_count(dev->_dev, vendor_id, product_id);
+	return nputil_win32hid_count(dev, vendor_id, product_id);
 }
 
 lightstone* lightstone_create()
@@ -31,25 +33,32 @@ void lightstone_delete(lightstone* dev)
 	nputil_win32hid_delete_struct(dev);
 }
 
-int lightstone_open(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id)
+int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id)
 {
-	return nputil_win32hid_open(dev->_dev, vendor_id, product_id, device_index);
+	return nputil_win32hid_open(dev, vendor_id, product_id, device_index);
 }
 
-int lightstone_close(lightstone dev)
+void lightstone_close(lightstone* dev)
 {
-	return nputil_win32hid_close(dev->_dev);
+	nputil_win32hid_close(dev);
 }
 
-int lightstone_read(lightstone* dev, char* report, unsigned int report_length)
+int lightstone_read(lightstone* dev, unsigned char* report, unsigned int report_length)
 {
 	int transferred;
 	int t;
 	t = ReadFile 
-		(device->_dev, 
+		(dev->_dev, 
 		 report,
 		 Capabilities.InputReportByteLength,
 		 &transferred,
 		 NULL);
-	return transferred;
+	if(t <= 0)
+	{
+		return t;
+	}
+	//There's a padding byte at the beginning
+	//Copy over that so it looks like what libusb gives us.
+	memcpy(report, report + 1, report_length);
+	return transferred - 1;
 }

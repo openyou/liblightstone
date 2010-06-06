@@ -1,3 +1,6 @@
+#define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
+unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
+
 unsigned int hex2dec(char *data, unsigned int len)
 {
 	unsigned int i;
@@ -58,19 +61,19 @@ lightstone_info lightstone_get_info(lightstone* dev)
 	ret.scl = -1;
 	if (lightstone_valid(dev))
 	{
-		int NumberOfBytesRead;
 		char rawAscii[300];
 		unsigned char InputReport[256];
 		char message_started = 0;
 		int transferred = 0;
 		int char_count = 0;
 		int ii;
-		int t;
+
 		while(1)
 		{
 			transferred = lightstone_read(dev, InputReport, 8);
-			if(transferred == 0x8)
+			if(transferred == 0x8 || transferred == 0x9)
 			{
+				//printf("%d\n", InputReport[0]);
 				for(ii = 1; ii < InputReport[0]+1; ++ii)
 				{
 					if(!message_started && InputReport[ii] != '<') continue;

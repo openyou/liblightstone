@@ -12,19 +12,18 @@
 #ifndef LIBLIGHTSTONE_H
 #define LIBLIGHTSTONE_H
 
-#define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
-unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
 #if defined(WIN32)
-#if !defined(NPUTIL_WIN32_HID_STRUCT)
-#define NPUTIL_WIN32_HID_STRUCT
+#if !defined(NPUTIL_WIN32HID_STRUCT)
+#define NPUTIL_WIN32HID_STRUCT
+#include <windows.h>
 typedef struct {
-	HANDLE* _device;
+	HANDLE* _dev;
 	int _is_open;
 	int _is_inited;
 } nputil_win32hid_struct;
 #endif
-typedef nputil_win32_struct lightstone;
+typedef nputil_win32hid_struct lightstone;
 
 #else //Non-Win32 platforms
 
