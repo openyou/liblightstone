@@ -20,10 +20,16 @@ ELSE()
   INCLUDE_DIRECTORIES(../libnputil/include/ .)
   SET(SRCS lightstone_win32.c ../libnputil/src/nputil_win32hid.c)
 
+  SET(DEFS "-DUSE_WIN32")
+
+  IF(BUILD_SHARED)
+    LIST(APPEND DEFS "-DLIGHTSTONE_DYNAMIC")
+  ENDIF()
+
   BUILDSYS_BUILD_LIB(
     NAME lightstone
     SOURCES "${SRCS}" 
-    CXX_FLAGS "-DUSE_WIN32"
+    CXX_FLAGS "${DEFS}"
     LINK_LIBS ${LIBLIGHTSTONE_DEP_LIBS}
     LINK_FLAGS FALSE
     DEPENDS FALSE

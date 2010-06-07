@@ -14,7 +14,7 @@
 
 
 #if defined(WIN32)
-#if !defined(LIGHTSTONE_STATIC)
+#if defined(LIGHTSTONE_DYNAMIC)
 #define LIGHTSTONE_DECLSPEC __declspec(dllexport)
 #else
 #define LIGHTSTONE_DECLSPEC
