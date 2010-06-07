@@ -42,10 +42,7 @@ INITIALIZE_BUILD()
 #Common Options
 
 OPTION_LIBRARY_BUILD_STATIC(ON)
-#We can't build shared on MSVC yet
-IF(NOT MSVC)
-  OPTION_LIBRARY_BUILD_SHARED(ON)
-ENDIF(NOT MSVC)
+OPTION_LIBRARY_BUILD_SHARED(ON)
 OPTION_ARCH_OPTS(ON)
 
 #Project specific options
@@ -63,6 +60,7 @@ ELSE()
   SET(WDK_PATH CACHE PATH "Path to WDK Installation")
   INCLUDE_DIRECTORIES(${WDK_PATH}/inc/api ${WDK_PATH}/inc/crt ${WDK_PATH}/inc)
   LINK_DIRECTORIES(${WDK_PATH}/lib/wxp/i386)
+  SET(LIBLIGHTSTONE_DEP_LIBS "hid.lib" "setupapi.lib")
 ENDIF()
 
 ######################################################################################

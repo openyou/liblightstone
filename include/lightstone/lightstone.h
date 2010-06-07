@@ -14,6 +14,11 @@
 
 
 #if defined(WIN32)
+#if !defined(LIGHTSTONE_STATIC)
+#define LIGHTSTONE_DECLSPEC __declspec(dllexport)
+#else
+#define LIGHTSTONE_DECLSPEC
+#endif
 #if !defined(NPUTIL_WIN32HID_STRUCT)
 #define NPUTIL_WIN32HID_STRUCT
 #include <windows.h>
@@ -26,6 +31,7 @@ typedef struct {
 typedef nputil_win32hid_struct lightstone;
 
 #else //Non-Win32 platforms
+#define LIGHTSTONE_DECLSPEC
 
 #if !defined(NPUTIL_LIBUSB1_STRUCT)
 #define NPUTIL_LIBUSB1_STRUCT
@@ -52,20 +58,20 @@ typedef struct
 extern "C" {
 #endif
 
-	lightstone* lightstone_create();
-	void lightstone_delete(lightstone* dev);
+	LIGHTSTONE_DECLSPEC lightstone* lightstone_create();
+	LIGHTSTONE_DECLSPEC void lightstone_delete(lightstone* dev);
 	
-	int lightstone_get_count(lightstone* dev);
-	int lightstone_get_count_vid_pid(lightstone* dev, unsigned int vendor_id, unsigned int product_id);
+	LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* dev, unsigned int vendor_id, unsigned int product_id);
 	
-	int lightstone_open(lightstone* dev, unsigned int device_index);
-	int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id);
+	LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int device_index);
+	LIGHTSTONE_DECLSPEC int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id);
 
-	void lightstone_close(lightstone* dev);
-	int lightstone_valid(lightstone* dev);
+	LIGHTSTONE_DECLSPEC void lightstone_close(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_valid(lightstone* dev);
 
 	int lightstone_read(lightstone* dev, unsigned char *report, unsigned int report_length);
-	lightstone_info lightstone_get_info(lightstone* dev);
+	LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(lightstone* dev);
 	
 #ifdef __cplusplus
 }

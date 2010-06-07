@@ -1,7 +1,7 @@
 #define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
 unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
-unsigned int hex2dec(char *data, unsigned int len)
+LIGHTSTONE_DECLSPEC unsigned int hex2dec(char *data, unsigned int len)
 {
 	unsigned int i;
 	unsigned int value = 0;
@@ -18,7 +18,7 @@ unsigned int hex2dec(char *data, unsigned int len)
 	return value;
 }
 
-int lightstone_get_count(lightstone* dev)
+LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* dev)
 {
 	int i;
 	int count = 0;
@@ -29,7 +29,7 @@ int lightstone_get_count(lightstone* dev)
 	return count;
 }
 
-int lightstone_open(lightstone* dev, unsigned int index)
+LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int index)
 {
 	int i;
 	int count = 0;
@@ -48,12 +48,12 @@ int lightstone_open(lightstone* dev, unsigned int index)
 	return -1;
 }
 
-int lightstone_valid(lightstone* d)
+LIGHTSTONE_DECLSPEC int lightstone_valid(lightstone* d)
 {	
 	return d->_is_open;
 }
 
-lightstone_info lightstone_get_info(lightstone* dev)
+LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(lightstone* dev)
 {
 	lightstone_info ret;
 	//hid_return t;
