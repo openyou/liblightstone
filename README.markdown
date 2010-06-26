@@ -2,6 +2,7 @@ liblightstone
 =============
 
 by Kyle Machulis <kyle@nonpolynomial.com>
+
 Nonpolynomial Labs - http://www.nonpolynomial.com
 
 Description
@@ -19,20 +20,9 @@ liblightstone comes in two flavors: Win32 and libusb-1.0. The Win32 version uses
 Library Requirements (For Compilation)
 ======================================
 
-cmake
------
-
-http://www.cmake.org
-
-WDK (Windows Only)
-------------------
-
-http://www.microsoft.com/whdc/devtools/WDK/default.mspx
-
-libusb-1.0
-----------
-
-libusb-1.0: http://www.libusb.org
+* [CMake (Required on all platforms)](http://www.cmake.org)
+* [WDK (Windows Only)](http://www.microsoft.com/whdc/devtools/WDK/default.mspx)
+* [libusb-1.0 (All non-windows platforms)](http://www.libusb.org)
 
 Notes on Compilation and Usage
 ==============================
