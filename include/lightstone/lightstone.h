@@ -64,7 +64,7 @@ VER and SER messages identify the hardware, but are not useful otherwise. The RA
 - HRV - ((AA << 8) | (BB)) * .01 (Returning a value between 1.6-2.5)
 - SCR - ((CC << 8) | (DD)) * .001 (Returning a value between 3-15)
 
-@section liblightstoneLicense License (Standard MIT License)
+@section liblightstoneLicense License (Standard BSD License)
 
 Copyright (c) 2007-2010, Kyle Machulis/Nonpolynomial Labs
 All rights reserved.
