@@ -1,11 +1,9 @@
-=============
 liblightstone
 =============
 
 by Kyle Machulis <kyle@nonpolynomial.com>
 Nonpolynomial Labs - http://www.nonpolynomial.com
 
-===========
 Description
 ===========
 
@@ -13,47 +11,32 @@ This is a C-based development library for the Lightstone, a Biometric USB device
 
 liblightstone is released under the BSD License.
 
-======================
-Lightstone Information
-======================
-
-More information about the Lightstone internals and protocol can be found at 
-
-http://wiki.nonpolynomial.com/Lightstone
-
-=======================
 A Tale of Two Libraries
 =======================
 
-liblightstone comes in two flavors: Win32 and libusb-1.0. The Win32 version uses direct Win32 DDK calls to access the windows HID system, and reads raw reports from there. libusb-1.0 works for all platforms currently supporting the library. As of this writing (late December 2009), the libusb-1.0 version of liblightstone has been tested on OS X and linux, and will be on windows once the WinUSB layer is finished.
+liblightstone comes in two flavors: Win32 and libusb-1.0. The Win32 version uses direct Win32 DDK calls to access the windows HID system, and reads raw reports from there. libusb-1.0 works for all platforms currently supporting the library. As of this writing (late December 2009), the libusb-1.0 version of liblightstone has been tested on OS X and linux.
 
-======================================
 Library Requirements (For Compilation)
 ======================================
 
+cmake
 -----
-Win32
------
 
-(Visual Studio 2005 solution files provided)
+http://www.cmake.org
 
-Windows DDK: http://www.microsoft.com/whdc/devtools/ddk/default.msxp
+WDK (Windows Only)
+------------------
 
-----------
+http://www.microsoft.com/whdc/devtools/WDK/default.mspx
+
 libusb-1.0
 ----------
 
-(cmake cross-platform build files provided)
-
 libusb-1.0: http://www.libusb.org
 
-cmake: http://www.cmake.org
-
-==============================
 Notes on Compilation and Usage
 ==============================
 
---------
 Mac OS X
 --------
 
