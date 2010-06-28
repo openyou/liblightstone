@@ -24,6 +24,11 @@ Library Requirements (For Compilation)
 * [WDK (Windows Only)](http://www.microsoft.com/whdc/devtools/WDK/default.mspx)
 * [libusb-1.0 (All non-windows platforms)](http://www.libusb.org)
 
+Build Notes
+===========
+
+To build liblightstone, make a subdirectory in the source dir (called whatever you want), then go into that directory and run "cmake ..". This will generate the project files for your platform (makefiles for OS X and linux, visual studio for windows). For more information on project generators, look at the cmake documentation.
+
 Notes on Compilation and Usage
 ==============================
 

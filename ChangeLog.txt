@@ -1,6 +1,13 @@
 liblightstone ChangeLog
 =======================
 
+2010-06-27 Kyle Machulis <kyle@nonpolynomial.com>
+	* Released Version 1.0
+	* Readded Win32 bindings, using WDK this time
+	* CMaked Win32 build
+	* Moved all hardware calls to use libnputil calls, for simple reuse sake
+	* Markdowned the README so it'll look all purdy on github
+	* Added doxygen comments for all major useful functions
 2009-12-28 Kyle Machulis <kyle@nonpolynomial.com>
 	* Released Version 0.9.0
 	* Added simple pyusb-1.0 based python class
