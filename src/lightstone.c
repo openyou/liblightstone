@@ -39,6 +39,7 @@ LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int index)
 		// Dealing with the odd edge case of having a bunch of different lightstones hooked to the same system
 		// I'd like to believe no one would ever do that, but, well...
 		count = lightstone_get_count_vid_pid(dev, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
+		if(count == 0) continue;
 		if((count - 1) <= internal_index)
 		{
 			return lightstone_open_vid_pid(dev, internal_index, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
