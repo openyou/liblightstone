@@ -1,3 +1,18 @@
+/***
+ * @file lightstone.c
+ * @brief Common functions for lightstone communication
+ * @author Kyle Machulis (kyle@nonpolynomial.com)
+ * @copyright (c) 2006-2011 Nonpolynomial Labs/Kyle Machulis
+ * @license BSD License
+ *
+ * Project info at http://liblightstone.nonpolynomial.com/
+ *
+ */
+
+#include "lightstone/lightstone.h"
+#include <stdlib.h>
+#include <string.h>
+
 #define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
 unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
@@ -38,9 +53,9 @@ LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int index)
 	{
 		// Dealing with the odd edge case of having a bunch of different lightstones hooked to the same system
 		// I'd like to believe no one would ever do that, but, well...
-		count = lightstone_get_count_vid_pid(dev, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
+		count += lightstone_get_count_vid_pid(dev, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
 		if(count == 0) continue;
-		if((count - 1) <= internal_index)
+		if((count - 1) <= index)
 		{
 			return lightstone_open_vid_pid(dev, internal_index, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
 		}
@@ -71,10 +86,9 @@ LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(lightstone* dev)
 
 		while(1)
 		{
-			transferred = lightstone_read(dev, InputReport, 8);
+			transferred = lightstone_read(dev, InputReport);
 			if(transferred == 0x8 || transferred == 0x9)
 			{
-				//printf("%d\n", InputReport[0]);
 				for(ii = 1; ii < InputReport[0]+1; ++ii)
 				{
 					if(!message_started && InputReport[ii] != '<') continue;

@@ -9,56 +9,148 @@
  *
  */
 
+
+#include <stdlib.h>
 #include "lightstone/lightstone.h"
-#include "nputil/nputil_libusb1.h"
-#include <stdio.h>
-#include <string.h>
 
-#include <lightstone.c>
 
-lightstone* lightstone_create()
+LIGHTSTONE_DECLSPEC lightstone* lightstone_create()
 {
-	lightstone* s = nputil_libusb1_create_struct();
-	nputil_libusb1_init(s);
+	lightstone* s = (lightstone*)malloc(sizeof(lightstone));
+	s->_is_open = 0;
+	s->_is_inited = 0;
+	if(libusb_init(&s->_context) < 0)
+	{
+		return NULL;
+	}
+	s->_is_inited = 1;	
 	return s;
 }
 
-void lightstone_delete(lightstone* d)
+LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* s, unsigned int vendor_id, unsigned int product_id)
 {
-	nputil_libusb1_delete_struct(d);
+	struct libusb_device **devs;
+	struct libusb_device *found = NULL;
+	struct libusb_device *dev;
+	size_t i = 0;
+	int count = 0;
+
+	if (!s->_is_inited)
+	{
+		return E_LIGHTSTONE_NOT_INITED;
+	}
+	
+	if (libusb_get_device_list(s->_context, &devs) < 0)
+	{
+		return E_LIGHTSTONE_DRIVER_ERROR;
+	}
+
+	while ((dev = devs[i++]) != NULL)
+	{
+		struct libusb_device_descriptor desc;
+		int dev_error_code;
+		dev_error_code = libusb_get_device_descriptor(dev, &desc);
+		if (dev_error_code < 0)
+		{
+			break;
+		}
+		if (desc.idVendor == vendor_id && desc.idProduct == product_id)
+		{
+			++count;
+		}
+	}
+
+	libusb_free_device_list(devs, 1);
+	return count;
 }
 
-int lightstone_get_count_vid_pid(lightstone* d, unsigned int vendor_id, unsigned int product_id)
+LIGHTSTONE_DECLSPEC int lightstone_open_vid_pid(lightstone* s, unsigned int device_index, unsigned int device_vid, unsigned int device_pid)
 {
-	return nputil_libusb1_count(d, vendor_id, product_id);
-}
-
-int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id)
-{
-	char buffer[9];
 	int ret;
-	if((ret = nputil_libusb1_open(dev, vendor_id, product_id, device_index)) < 0)
+	struct libusb_device **devs;
+	struct libusb_device *found = NULL;
+	struct libusb_device *dev;
+	size_t i = 0;
+	int count = 0;
+	int device_error_code = 0;
+
+	if (!s->_is_inited)
 	{
-		return ret;
+		return E_LIGHTSTONE_NOT_INITED;
 	}
-	if(libusb_kernel_driver_active(dev->_device, 0))
+
+	if ((device_error_code = libusb_get_device_list(s->_context, &devs)) < 0)
 	{
-		libusb_detach_kernel_driver(dev->_device, 0);
+		return E_LIGHTSTONE_DRIVER_ERROR;
 	}
-	libusb_claim_interface(dev->_device, 0);
+
+	while ((dev = devs[i++]) != NULL)
+	{
+		struct libusb_device_descriptor desc;
+		device_error_code = libusb_get_device_descriptor(dev, &desc);
+		if (device_error_code < 0)
+		{
+			libusb_free_device_list(devs, 1);
+			return E_LIGHTSTONE_NOT_INITED;
+		}
+		if (desc.idVendor == device_vid && desc.idProduct == device_pid)
+		{
+			if(count == device_index)
+			{
+				found = dev;
+				break;
+			}
+			++count;
+		}
+	}
+
+	if (found)
+	{
+		device_error_code = libusb_open(found, &s->_device);
+		if (device_error_code < 0)
+		{
+			libusb_free_device_list(devs, 1);
+			return E_LIGHTSTONE_NOT_INITED;
+		}
+	}
+	else
+	{
+		return E_LIGHTSTONE_NOT_INITED;		
+	}
+	s->_is_open = 1;
+
+	if(libusb_kernel_driver_active(s->_device, 0))
+	{
+		libusb_detach_kernel_driver(s->_device, 0);
+	}
+	ret = libusb_claim_interface(s->_device, 0);
+
+	return ret;
+}
+
+LIGHTSTONE_DECLSPEC int lightstone_close(lightstone* s)
+{
+	if(!s->_is_open)
+	{
+		return E_LIGHTSTONE_NOT_OPENED;
+	}
+	if (libusb_release_interface(s->_device, 0) < 0)
+	{
+		return E_LIGHTSTONE_NOT_INITED;				
+	}
+	libusb_close(s->_device);
+	s->_is_open = 0;
 	return 0;
 }
 
-void lightstone_close(lightstone* dev)
+LIGHTSTONE_DECLSPEC void lightstone_delete(lightstone* dev)
 {
-	nputil_libusb1_close(dev);
+	free(dev);
 }
 
-int lightstone_read(lightstone* dev, unsigned char* report, unsigned int report_length)
+int lightstone_read(lightstone* dev, unsigned char* input_report)
 {
-	int transferred;
-	int t;
-	t = libusb_interrupt_transfer(dev->_device, 0x81, report, report_length, &transferred, 0x10);	
-	return transferred;
+	int trans;
+	int ret = libusb_bulk_transfer(dev->_device, LIGHTSTONE_IN_ENDPT, input_report, 8, &trans, 0x10);
+	return trans;
 }
-

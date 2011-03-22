@@ -99,6 +99,10 @@ Core communications functions to open/close/read from the lightstone
 #ifndef LIBLIGHTSTONE_H
 #define LIBLIGHTSTONE_H
 
+#define E_LIGHTSTONE_DRIVER_ERROR -1
+#define E_LIGHTSTONE_NOT_INITED -2
+#define E_LIGHTSTONE_NOT_OPENED -3
+
 #if defined(WIN32)
 #if defined(LIGHTSTONE_DYNAMIC)
 /// definition for when building DLLs. Doesn't need to be defined otherwise.
@@ -125,16 +129,12 @@ typedef struct {
 	int _is_open;
 	/// 0 if device is initialized, > 0 otherwise
 	int _is_inited;
-} nputil_win32hid_struct;
+} lightstone
 #endif
-/// Typedef to keep lightstone type consistent across platforms
-typedef nputil_win32hid_struct lightstone;
 
 #else //Non-Win32 platforms
 #define LIGHTSTONE_DECLSPEC
 
-#if !defined(NPUTIL_LIBUSB1_STRUCT)
-#define NPUTIL_LIBUSB1_STRUCT
 #include "libusb-1.0/libusb.h"
 /**
  * Structure to hold information about libusb-1.0 devices.
@@ -154,11 +154,11 @@ typedef struct {
 	int _is_open;
 	/// 0 if device is not initialized, > 0 otherwise
 	int _is_inited;
-} nputil_libusb1_struct;
+} lightstone;
 #endif
-/// Typedef to keep lightstone type consistent across platforms
-typedef nputil_libusb1_struct lightstone;
-#endif
+
+/// In endpoint for all omron health devices
+static const uint32_t LIGHTSTONE_IN_ENDPT  = 0x81;
 
 /// Lightstone information structure
 typedef struct
@@ -253,7 +253,7 @@ extern "C" {
 	 * @param dev Initialized and opened device to close.
 	 * @ingroup CoreFunctions
 	 */
-	LIGHTSTONE_DECLSPEC void lightstone_close(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_close(lightstone* dev);
 
 	/**
 	 * Test whether the current device is initialized
@@ -276,7 +276,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return
 	 */
-	int lightstone_read(lightstone* dev, unsigned char *report, unsigned int report_length);
+	int lightstone_read(lightstone* dev, unsigned char *report);
 
 	/**
 	 * Retreive a single HRV/SCL pair from the device. Blocks until
