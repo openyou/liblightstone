@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 			printf("Cannot open lightstone!\n");
 			return 1;
 		}
+		printf("Opening lightstone %d\n", i + 1);
 		for(j = 0; j < 10; ++j)
 		{
 			r = lightstone_get_info(test);
@@ -44,6 +45,7 @@ int main(int argc, char** argv)
 			}
 			printf ("%f %f\n", r.hrv, r.scl);
 		}
+		printf("Closed lightstone %d\n", i + 1)
 	}
 	lightstone_delete(test);
 	return 0;

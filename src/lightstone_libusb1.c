@@ -27,12 +27,13 @@ LIGHTSTONE_DECLSPEC lightstone* lightstone_create()
 	return s;
 }
 
-LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* s, unsigned int vendor_id, unsigned int product_id)
+LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* s)
 {
 	struct libusb_device **devs;
 	struct libusb_device *found = NULL;
 	struct libusb_device *dev;
 	size_t i = 0;
+	int j = 0;
 	int count = 0;
 
 	if (!s->_is_inited)
@@ -54,9 +55,13 @@ LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* s, unsigned int
 		{
 			break;
 		}
-		if (desc.idVendor == vendor_id && desc.idProduct == product_id)
+		for(j = 0; j < LIGHTSTONE_VID_PID_PAIRS_COUNT; ++j)
 		{
-			++count;
+			if (desc.idVendor == lightstone_vid_pid_pairs[j][0] && desc.idProduct == lightstone_vid_pid_pairs[j][1])
+			{
+				++count;
+				break;
+			}
 		}
 	}
 
@@ -64,13 +69,14 @@ LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* s, unsigned int
 	return count;
 }
 
-LIGHTSTONE_DECLSPEC int lightstone_open_vid_pid(lightstone* s, unsigned int device_index, unsigned int device_vid, unsigned int device_pid)
+LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* s, unsigned int device_index)
 {
 	int ret;
 	struct libusb_device **devs;
 	struct libusb_device *found = NULL;
 	struct libusb_device *dev;
 	size_t i = 0;
+	int j = 0;
 	int count = 0;
 	int device_error_code = 0;
 
@@ -93,15 +99,21 @@ LIGHTSTONE_DECLSPEC int lightstone_open_vid_pid(lightstone* s, unsigned int devi
 			libusb_free_device_list(devs, 1);
 			return E_LIGHTSTONE_NOT_INITED;
 		}
-		if (desc.idVendor == device_vid && desc.idProduct == device_pid)
+		for(j = 0; j < LIGHTSTONE_VID_PID_PAIRS_COUNT; ++j)
 		{
-			if(count == device_index)
+			if (desc.idVendor == lightstone_vid_pid_pairs[j][0] && desc.idProduct == lightstone_vid_pid_pairs[j][1])
 			{
-				found = dev;
+				if(count == device_index)
+				{
+					found = dev;
+					break;
+				}
+				++count;
 				break;
 			}
-			++count;
+			if(found) break;
 		}
+		if(found) break;
 	}
 
 	if (found)

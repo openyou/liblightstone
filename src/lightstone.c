@@ -13,9 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
-unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
-
 LIGHTSTONE_DECLSPEC unsigned int hex2dec(char *data, unsigned int len)
 {
 	unsigned int i;
@@ -31,37 +28,6 @@ LIGHTSTONE_DECLSPEC unsigned int hex2dec(char *data, unsigned int len)
 			return 0;
 	}
 	return value;
-}
-
-LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* dev)
-{
-	int i;
-	int count = 0;
-	for(i = 0; i < LIGHTSTONE_VID_PID_PAIRS_COUNT; ++i)
-	{
-		count += lightstone_get_count_vid_pid(dev, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
-	}
-	return count;
-}
-
-LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int index)
-{
-	int i;
-	int count = 0;
-	int internal_index = index;
-	for(i = 0; i < LIGHTSTONE_VID_PID_PAIRS_COUNT; ++i)
-	{
-		// Dealing with the odd edge case of having a bunch of different lightstones hooked to the same system
-		// I'd like to believe no one would ever do that, but, well...
-		count += lightstone_get_count_vid_pid(dev, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
-		if(count == 0) continue;
-		if((count - 1) <= index)
-		{
-			return lightstone_open_vid_pid(dev, internal_index, lightstone_vid_pid_pairs[i][0], lightstone_vid_pid_pairs[i][1]);
-		}
-		internal_index -= count;
-	}
-	return -1;
 }
 
 LIGHTSTONE_DECLSPEC int lightstone_valid(lightstone* d)

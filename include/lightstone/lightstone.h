@@ -157,6 +157,9 @@ typedef struct {
 } lightstone;
 #endif
 
+#define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
+static const unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
+
 /// In endpoint for all omron health devices
 static const uint32_t LIGHTSTONE_IN_ENDPT  = 0x81;
 
@@ -211,19 +214,6 @@ extern "C" {
 	LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* dev);
 
 	/**
-	 * Return the count of a certain device VID/PID pair on the system
-	 *
-	 * @param dev Initialized device stucture (does not have to be
-	 * opened)
-	 * @param vendor_id USB Vendor ID for device
-	 * @param product_id USB Product ID for device
-	 *
-	 * @ingroup CoreFunctions
-	 * @return Count of VID/PID pair matches connected to the computer
-	 */
-	LIGHTSTONE_DECLSPEC int lightstone_get_count_vid_pid(lightstone* dev, unsigned int vendor_id, unsigned int product_id);
-
-	/**
 	 * Open a lightstone device of an VID/PID known to liblightstone
 	 *
 	 * @param dev Initialized device structure
@@ -233,19 +223,6 @@ extern "C" {
 	 * @return 0 if device opened successfully, non-zero otherwise
 	 */
 	LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int device_index);
-
-	/**
-	 * Open a lightstone device of a certain VID/PID
-	 *
-	 * @param dev Initialized device structure
-	 * @param device_index Index of device to open on bus, starts at 0
-	 * @param vendor_id USB Vendor ID for device
-	 * @param product_id USB Product ID for device
-	 *
-	 * @ingroup CoreFunctions
-	 * @return 0 if device opened successfully, non-zero otherwise
-	 */
-	LIGHTSTONE_DECLSPEC int lightstone_open_vid_pid(lightstone* dev, unsigned int device_index, unsigned int vendor_id, unsigned int product_id);
 
 	/**
 	 * Close an opened device
