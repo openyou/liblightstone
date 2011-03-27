@@ -1,16 +1,12 @@
-/*
- * Declaration file for Lightstone User Space Driver
+/***
+ * @file lightstone_win32.c
+ * @brief Win32 functions for lightstone communication
+ * @author Kyle Machulis (kyle@nonpolynomial.com)
+ * @copyright (c) 2006-2011 Nonpolynomial Labs/Kyle Machulis
+ * @license BSD License
  *
- * Copyright (c) 2007-2008 Kyle Machulis/Nonpolynomial Labs <kyle@nonpolynomial.com>
+ * Project info at http://liblightstone.nonpolynomial.com/
  *
- * More info on Nonpolynomial Labs @ http://www.nonpolynomial.com
- *
- * Sourceforge project @ http://www.sourceforge.net/projects/liblightstone/
- *
- * Win32 code adapted from Lightstone Monitor (http://sourceforge.net/projects/lsm/)
- *
- * This library is covered by the MIT License
- * Read LICENSE_MIT.txt for details.
  */
 
 #include "lightstone/lightstone.h"

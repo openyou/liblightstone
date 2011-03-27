@@ -2,7 +2,7 @@
  * @file lightstone_libusb1.c
  * @brief LibUSB based implementation of lightstone communication
  * @author Kyle Machulis (kyle@nonpolynomial.com)
- * @copyright (c) 2006-2009 Nonpolynomial Labs/Kyle Machulis
+ * @copyright (c) 2006-2011 Nonpolynomial Labs/Kyle Machulis
  * @license BSD License
  *
  * Project info at http://liblightstone.nonpolynomial.com/

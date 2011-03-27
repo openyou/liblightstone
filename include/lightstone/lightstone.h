@@ -2,7 +2,7 @@
  * @file lightstone.h
  * @brief Implementation of lightstone communication
  * @author Kyle Machulis (kyle@nonpolynomial.com)
- * @copyright (c) 2007-2010 Nonpolynomial Labs/Kyle Machulis
+ * @copyright (c) 2007-2011 Nonpolynomial Labs/Kyle Machulis
  * @license BSD License
  *
  * Project info at http://liblightstone.nonpolynomial.com/
@@ -33,10 +33,10 @@ The lightstone is unfortunately not without its eccentricities.
 
 - There are two versions of the lightstone that liblightstone knows about, with two completely different VID/PID pairs.
  - The blue lightstone has a VID/PID pair of {0x0483, 0x0035}
- - The white IOM device has a VID/PID pair of {0x14FA, 0x0001}
- - These are the only two pairs that liblightstone is aware of. However, open functions are provided that take any VID/PID pair in case of future additions of hardware
+ - The white IOM device has a VID/PID pair of {0x14FA, 0x0001} (Blue devices of this pair have also been seen)
+ - These are the only two pairs that liblightstone is aware of.
 - Since the device registers as an HID device, any OS with an HID manager will pick it up and register it as such. On Linux and OS X, there is no way to access the device once this happens.
- - On Linux, liblightstone takes care of detaching the kernel driver from the device for the user
+ - On Linux, liblightstone takes care of detaching the kernel driver from the device for the user. This can also be fixed permanently via udev rules.
  - On OS X, liblightstone requires that a null kext be in place in order to stop the kernel from picking up the device. This kext is distributed with the OS X library package for liblightstone, as well as in a standalone version.
 
 @section liblightstoneHardwareInformation Hardware and Protocol Information
@@ -66,7 +66,7 @@ VER and SER messages identify the hardware, but are not useful otherwise. The RA
 
 @section liblightstoneLicense License (Standard BSD License)
 
-Copyright (c) 2007-2010, Kyle Machulis/Nonpolynomial Labs
+Copyright (c) 2007-2011, Kyle Machulis/Nonpolynomial Labs
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -152,7 +152,9 @@ typedef struct {
 } lightstone;
 #endif
 
+/// Number of VID/PID pairs that we know about
 #define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
+/// VID/PID pairs for devices
 static const unsigned int lightstone_vid_pid_pairs[2][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
 /// In endpoint for all omron health devices
