@@ -237,26 +237,25 @@ int lightstone_open_func(lightstone* dev, unsigned int device_index, int get_cou
 			//Is it the desired device?
 
 			MyDeviceDetected = FALSE;
-			printf("0x%.02x 0x%.02x\n", Attributes.VendorID, Attributes.ProductID);
 
 			for(i = 0; i < LIGHTSTONE_VID_PID_PAIRS_COUNT; ++i)
 			{
 				if (Attributes.VendorID == lightstone_vid_pid_pairs[i][0] && Attributes.ProductID == lightstone_vid_pid_pairs[i][1])
 				{
-					printf("Found!\n");
 					if(get_count)
 					{
 						++device_count;
 						CloseHandle(dev->_dev);
 						break;
 					}
-					else
+					else if(device_count == device_index)
 					{
 						MyDeviceDetected = TRUE;
 						MyDevicePathName = detailData->DevicePath;
 						GetDeviceCapabilities(dev->_dev);
 						break;
 					}
+					++device_count;
 				}
 			}  //if (Result != 0)
 			if(!MyDeviceDetected) free(detailData);
