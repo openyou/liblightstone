@@ -35,6 +35,7 @@ The lightstone is unfortunately not without its eccentricities.
  - The blue lightstone has a VID/PID pair of {0x0483, 0x0035}
  - The white IOM device has a VID/PID pair of {0x14FA, 0x0001} (Blue devices of this pair have also been seen)
  - These are the only two pairs that liblightstone is aware of.
+- The two versions put out completely different ranges for readings. Do not expect code with hardcoded ranges to work on both devices.
 - Since the device registers as an HID device, any OS with an HID manager will pick it up and register it as such. On Linux and OS X, there is no way to access the device once this happens.
  - On Linux, liblightstone takes care of detaching the kernel driver from the device for the user. This can also be fixed permanently via udev rules.
  - On OS X, liblightstone requires that a null kext be in place in order to stop the kernel from picking up the device. This kext is distributed with the OS X library package for liblightstone, as well as in a standalone version.
