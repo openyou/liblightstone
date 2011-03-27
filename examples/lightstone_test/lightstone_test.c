@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 			}
 			printf ("%f %f\n", r.hrv, r.scl);
 		}
-		printf("Closed lightstone %d\n", i + 1)
+		printf("Closed lightstone %d\n", i + 1);
 	}
 	lightstone_delete(test);
 	return 0;

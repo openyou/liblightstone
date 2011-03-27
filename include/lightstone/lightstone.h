@@ -111,9 +111,6 @@ Core communications functions to open/close/read from the lightstone
 /// definition for when building DLLs. Doesn't need to be defined otherwise.
 #define LIGHTSTONE_DECLSPEC
 #endif
-
-#if !defined(NPUTIL_WIN32HID_STRUCT)
-#define NPUTIL_WIN32HID_STRUCT
 #include <windows.h>
 
 /**
@@ -129,9 +126,7 @@ typedef struct {
 	int _is_open;
 	/// 0 if device is initialized, > 0 otherwise
 	int _is_inited;
-} lightstone
-#endif
-
+} lightstone;
 #else //Non-Win32 platforms
 #define LIGHTSTONE_DECLSPEC
 
@@ -158,10 +153,10 @@ typedef struct {
 #endif
 
 #define LIGHTSTONE_VID_PID_PAIRS_COUNT 2
-static const unsigned int lightstone_vid_pid_pairs[LIGHTSTONE_VID_PID_PAIRS_COUNT][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
+static const unsigned int lightstone_vid_pid_pairs[2][2] = { {0x0483, 0x0035}, {0x14FA, 0x0001} };
 
 /// In endpoint for all omron health devices
-static const uint32_t LIGHTSTONE_IN_ENDPT  = 0x81;
+static const unsigned int LIGHTSTONE_IN_ENDPT  = 0x81;
 
 /// Lightstone information structure
 typedef struct

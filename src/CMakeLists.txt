@@ -3,8 +3,8 @@
 ######################################################################################
 
 IF(NOT WIN32)
-  INCLUDE_DIRECTORIES(../libnputil/include/ .)
-  SET(SRCS lightstone.c lightstone_libusb1.c ../libnputil/src/nputil_libusb1.c)
+  INCLUDE_DIRECTORIES(.)
+  SET(SRCS lightstone.c lightstone_libusb1.c)
 
   BUILDSYS_BUILD_LIB(
     NAME lightstone
@@ -18,9 +18,9 @@ IF(NOT WIN32)
     )
 ELSE()
   INCLUDE_DIRECTORIES(../libnputil/include/ .)
-  SET(SRCS lightstone_win32.c ../libnputil/src/nputil_win32hid.c)
+  SET(SRCS lightstone.c lightstone_win32.c)
 
-  SET(DEFS "-DUSE_WIN32")
+  #SET(DEFS "-DUSE_WIN32")
 
   IF(BUILD_SHARED)
     LIST(APPEND DEFS "-DLIGHTSTONE_DYNAMIC")
