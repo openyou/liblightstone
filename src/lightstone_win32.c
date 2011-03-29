@@ -210,6 +210,7 @@ int lightstone_open_func(lightstone* dev, unsigned int device_index, int get_cou
 
 			if(dev->_dev == INVALID_HANDLE_VALUE)
 			{
+				MemberIndex = MemberIndex + 1;
 				continue;
 			}
 			/*
