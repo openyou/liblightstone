@@ -1,6 +1,10 @@
 liblightstone ChangeLog
 =======================
 
+2011-03-28 Kyle Machulis <kyle@nonpolynomial.com>
+	* Released Version 1.5
+	* Fixed bug involving opening multiple devices at the same time
+	* Fixed bug involving opening different VID/PID pairs
 2010-06-27 Kyle Machulis <kyle@nonpolynomial.com>
 	* Released Version 1.0
 	* Readded Win32 bindings, using WDK this time
