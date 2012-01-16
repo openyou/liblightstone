@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 			return 1;
 		}
 		printf("Opening lightstone %d\n", i + 1);
-		for(j = 0; j < 10; ++j)
+		while(1)//for(j = 0; j < 10; ++j)
 		{
 			r = lightstone_get_info(test);
 			if(r.hrv < 0) 
