@@ -2,7 +2,7 @@
  * @file lightstone.h
  * @brief Implementation of lightstone communication
  * @author Kyle Machulis (kyle@nonpolynomial.com)
- * @copyright (c) 2007-2011 Nonpolynomial Labs/Kyle Machulis
+ * @copyright (c) 2007-2012 Nonpolynomial Labs/Kyle Machulis
  * @license BSD License
  *
  * Project info at http://liblightstone.nonpolynomial.com/
@@ -108,49 +108,9 @@ Core communications functions to open/close/read from the lightstone
 #if defined(LIGHTSTONE_DYNAMIC)
 /// definition for when building DLLs. Doesn't need to be defined otherwise.
 #define LIGHTSTONE_DECLSPEC __declspec(dllexport)
-#else
-/// definition for when building DLLs. Doesn't need to be defined otherwise.
-#define LIGHTSTONE_DECLSPEC
 #endif
-#include <windows.h>
-
-/**
- * Structure to hold information about Windows HID devices.
- *
- * Structure taken from libnputil.
- * @ingroup CoreFunctions
- */
-typedef struct {
-	/// Windows device handle
-	HANDLE* _dev;
-	/// 0 if device is closed, > 0 otherwise
-	int _is_open;
-	/// 0 if device is initialized, > 0 otherwise
-	int _is_inited;
-} lightstone;
-#else //Non-Win32 platforms
+#else
 #define LIGHTSTONE_DECLSPEC
-
-#include "libusb-1.0/libusb.h"
-/**
- * Structure to hold information about libusb-1.0 devices.
- *
- * Structure taken from libnputil.
- */
-typedef struct {
-	/// Library context for libusb-1.0
-	struct libusb_context* _context;
-	/// Specific device context for libusb-1.0
-	struct libusb_device_handle* _device;
-	/// In transfer object for asynchronous libusb-1.0 transfers
-	struct libusb_transfer* _in_transfer;
-	/// Out transfer object for asynchronous libusb-1.0 transfers
-	struct libusb_transfer* _out_transfer;
-	/// 0 if device is closed, > 0 otherwise
-	int _is_open;
-	/// 0 if device is not initialized, > 0 otherwise
-	int _is_inited;
-} lightstone;
 #endif
 
 /// Number of VID/PID pairs that we know about
@@ -180,6 +140,8 @@ typedef struct
 extern "C" {
 #endif
 
+	struct lightstone;
+
 	/**
 	 * Create a lightstone device structure and return it. Must be
 	 * called for each lightstone device to be used.
@@ -188,7 +150,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return Initialized device structure
 	 */
-	LIGHTSTONE_DECLSPEC lightstone* lightstone_create();
+	LIGHTSTONE_DECLSPEC struct lightstone* lightstone_create();
 
 	/**
 	 * Destroy a lightstone device. Will also close the device if it
@@ -197,7 +159,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @param dev Device structure to destroy
 	 */
-	LIGHTSTONE_DECLSPEC void lightstone_delete(lightstone* dev);
+	LIGHTSTONE_DECLSPEC void lightstone_delete(struct lightstone* dev);
 
 	/**
 	 * Count the number of lightstones on the system, of all known
@@ -209,7 +171,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return Number of lightstones connected to the computer
 	 */
-	LIGHTSTONE_DECLSPEC int lightstone_get_count(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_get_count(struct lightstone* dev);
 
 	/**
 	 * Open a lightstone device of an VID/PID known to liblightstone
@@ -220,7 +182,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return 0 if device opened successfully, non-zero otherwise
 	 */
-	LIGHTSTONE_DECLSPEC int lightstone_open(lightstone* dev, unsigned int device_index);
+	LIGHTSTONE_DECLSPEC int lightstone_open(struct lightstone* dev, unsigned int device_index);
 
 	/**
 	 * Close an opened device
@@ -228,7 +190,7 @@ extern "C" {
 	 * @param dev Initialized and opened device to close.
 	 * @ingroup CoreFunctions
 	 */
-	LIGHTSTONE_DECLSPEC int lightstone_close(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_close(struct lightstone* dev);
 
 	/**
 	 * Test whether the current device is initialized
@@ -238,7 +200,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return > 0 if device is initialized, 0 otherwise
 	 */
-	LIGHTSTONE_DECLSPEC int lightstone_valid(lightstone* dev);
+	LIGHTSTONE_DECLSPEC int lightstone_valid(struct lightstone* dev);
 
 	/**
 	 * Internal function used to read via platform specific
@@ -251,7 +213,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return
 	 */
-	int lightstone_read(lightstone* dev, unsigned char *report);
+	int lightstone_read(struct lightstone* dev, unsigned char *report);
 
 	/**
 	 * Retreive a single HRV/SCL pair from the device. Blocks until
@@ -262,7 +224,7 @@ extern "C" {
 	 * @ingroup CoreFunctions
 	 * @return Structure with latest HRV/SCL reading
 	 */
-	LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(lightstone* dev);
+	LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(struct lightstone* dev);
 
 #ifdef __cplusplus
 }

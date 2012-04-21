@@ -2,7 +2,7 @@
  * @file lightstone.c
  * @brief Common functions for lightstone communication
  * @author Kyle Machulis (kyle@nonpolynomial.com)
- * @copyright (c) 2006-2011 Nonpolynomial Labs/Kyle Machulis
+ * @copyright (c) 2006-2012 Nonpolynomial Labs/Kyle Machulis
  * @license BSD License
  *
  * Project info at http://liblightstone.nonpolynomial.com/
@@ -10,8 +10,124 @@
  */
 
 #include "lightstone/lightstone.h"
+#include <hidapi.h>
 #include <stdlib.h>
 #include <string.h>
+
+/**
+ * Opaque structure to hold information about HID devices.
+ *
+ * @ingroup CoreFunctions
+ */
+struct lightstone {
+	/// hidapi device handle
+	hid_device* _dev;
+	/// 0 if device is closed, > 0 otherwise
+	int _is_open;
+	/// 0 if device is initialized, > 0 otherwise
+	int _is_inited;
+};
+
+LIGHTSTONE_DECLSPEC struct lightstone* lightstone_create()
+{
+	struct lightstone* s = (struct lightstone*)malloc(sizeof(struct lightstone));
+	s->_is_open = 0;
+	s->_is_inited = 0;
+	hid_init();
+	s->_is_inited = 1;	
+	return s;
+}
+
+LIGHTSTONE_DECLSPEC int lightstone_get_count(struct lightstone* s)
+{
+	if (!s->_is_inited)
+	{
+		return E_LIGHTSTONE_NOT_INITED;
+	}
+	int count = 0;
+	struct hid_device_info* devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
+	struct hid_device_info* devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
+
+	struct hid_device_info* device_cur = devices_old;
+	while(device_cur) {
+		++count;
+		device_cur = device_cur->next;
+	}
+	device_cur = devices_new;
+	while(device_cur) {
+		++count;
+		device_cur = device_cur->next;
+	}
+	
+	hid_free_enumeration(devices_old);
+	hid_free_enumeration(devices_new);	
+	return count;
+}
+
+LIGHTSTONE_DECLSPEC int lightstone_open(struct lightstone* s, unsigned int device_index)
+{
+	if (!s->_is_inited)
+	{
+		return E_LIGHTSTONE_NOT_INITED;
+	}
+
+	struct hid_device_info* devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
+	struct hid_device_info* devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
+
+	int count = 0;
+	
+	struct hid_device_info* device_cur = devices_old;
+	while(device_cur) {
+		if(count == device_index) {
+			printf("opening %s!\n");
+			s->_dev = hid_open_path(device_cur->path);
+			break;
+		}
+		++count;
+		device_cur = device_cur->next;
+	}
+	if(!s->_dev) {
+		device_cur = devices_new;
+		while(device_cur) {
+			if(count == device_index) {
+				s->_dev = hid_open_path(device_cur->path);
+				break;
+			}
+			++count;
+			device_cur = device_cur->next;
+		}
+	}
+	hid_free_enumeration(devices_old);
+	hid_free_enumeration(devices_new);
+	if(!s->_dev) {
+		return E_LIGHTSTONE_NOT_OPENED;
+	}
+	s->_is_open = 1;
+	return 0;
+}
+
+LIGHTSTONE_DECLSPEC int lightstone_close(struct lightstone* s)
+{
+	if(!s->_is_open)
+	{
+		return E_LIGHTSTONE_NOT_OPENED;
+	}
+	hid_close(s->_dev);
+	s->_is_open = 0;
+	return 0;
+}
+
+LIGHTSTONE_DECLSPEC void lightstone_delete(struct lightstone* dev)
+{
+	free(dev);
+	dev = NULL;
+	hid_exit();
+}
+
+int lightstone_read(struct lightstone* dev, unsigned char* input_report)
+{
+	return hid_read(dev->_dev, input_report, 8);;
+}
 
 LIGHTSTONE_DECLSPEC unsigned int hex2dec(char *data, unsigned int len)
 {
@@ -30,12 +146,12 @@ LIGHTSTONE_DECLSPEC unsigned int hex2dec(char *data, unsigned int len)
 	return value;
 }
 
-LIGHTSTONE_DECLSPEC int lightstone_valid(lightstone* d)
+LIGHTSTONE_DECLSPEC int lightstone_valid(struct lightstone* d)
 {	
 	return d->_is_open;
 }
 
-LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(lightstone* dev)
+LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(struct lightstone* dev)
 {
 	lightstone_info ret;
 	//hid_return t;

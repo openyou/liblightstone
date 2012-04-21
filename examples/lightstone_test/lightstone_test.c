@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-	lightstone* test = lightstone_create();
+	struct lightstone* test = lightstone_create();
 	lightstone_info r;
 	int ret, count, i, j;
 
