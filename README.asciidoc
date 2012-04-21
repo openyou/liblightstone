@@ -57,7 +57,7 @@ with source releases.
 
 == Licenses ==
 
-=== liblighstone ===
+=== liblighstone (BSD License) ===
 
 ---------------------
 Copyright (c) 2007-2012, Kyle Machulis/Nonpolynomial Labs
@@ -86,7 +86,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 ---------------------
 
-=== hidapi ===
+=== hidapi (BSD License) ===
 
 ---------------------
 Copyright (c) 2010, Alan Ott, Signal 11 Software
