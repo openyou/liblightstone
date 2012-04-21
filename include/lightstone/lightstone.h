@@ -104,11 +104,9 @@ Core communications functions to open/close/read from the lightstone
 #define E_LIGHTSTONE_NOT_INITED -2
 #define E_LIGHTSTONE_NOT_OPENED -3
 
-#if defined(WIN32)
-#if defined(LIGHTSTONE_DYNAMIC)
+#if defined(WIN32) && defined(LIGHTSTONE_DYNAMIC)
 /// definition for when building DLLs. Doesn't need to be defined otherwise.
 #define LIGHTSTONE_DECLSPEC __declspec(dllexport)
-#endif
 #else
 #define LIGHTSTONE_DECLSPEC
 #endif
