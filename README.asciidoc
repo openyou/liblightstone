@@ -1,8 +1,10 @@
-= liblightstone =
+== liblightstone ==
 
 by Kyle Machulis <kyle@nonpolynomial.com>
 
 Nonpolynomial Labs - http://www.nonpolynomial.com
+
+For issues and feature requests, please visit the Github Issues site: https://github.com/qdot/liblightstone/issues
 
 == Description ==
 
@@ -14,27 +16,13 @@ liblightstone is released under the BSD License.
 
 == Package Information ==
 
-Project Information @ http://liblightstone.nonpolynomial.com
-
-Source repo @ http://www.github.com/qdot/liblightstone
-
-Releases @ http://www.sourceforge.net/projects/liblightstone
-
-== A Tale of Two Libraries ==
-
-liblightstone comes in two flavors: Win32 and libusb-1.0. The Win32
-version uses direct Win32 DDK calls to access the windows HID system,
-and reads raw reports from there. libusb-1.0 works for all platforms
-currently supporting the library. As of this writing (late December
-2009), the libusb-1.0 version of liblightstone has been tested on OS X
-and linux.
+Source repo and Releases @ http://www.github.com/qdot/liblightstone
 
 == Library Requirements (For Compilation) ==
 
 
 - CMake (Required on all platforms) - http://www.cmake.org
-- WDK (Windows Only) - http://www.microsoft.com/whdc/devtools/WDK/default.mspx
-- libusb-1.0 (All non-windows platforms) - http://www.libusb.org
+- HIDAPI - https://github.com/signal11/hidapi
 
 == Build Notes ==
 
@@ -44,27 +32,34 @@ whatever you want), then go into that directory and run
 (makefiles for OS X and linux, visual studio for windows). For more
 information on project generators, look at the cmake documentation.
 
+== Included Examples ==
+
+- lightstone-test - Tries to open the first lightstone it finds on the
+  system, prints output
+- lightstone-osc - Only built if libosc is available on the system.
+  Transmits OSC messages from the selected lightstone. See program
+  options for more info.
+
 == Notes on Compilation and Usage ==
 
-=== Mac OS X ===
+=== Windows ===
 
-Assuming you have not installed the Journey to Wild Divine software
-and are not installing the dmg version of liblightstone, you will need
-to install the "Lightstone OS X Extension" in order to use the
-lightstone on OS X. 
+No known issues.
 
-Simply copy the LightstoneNullDriver.kext bundle included with the
-package to the /System/Library/Extensions directory and reboot.
+=== OS X ===
+
+No known issues.
 
 === Linux ===
 
-The VID/PID pair of the lightstone will need to be blacklisted on
-linux in order to use liblightstone there.
+The VID/PID pair will need to be added to udev in order to access the
+device without root priviledges. A sample udev file is distributed
+with source releases.
 
 == License ==
 
 ---------------------
-Copyright (c) 2007-2011, Kyle Machulis/Nonpolynomial Labs
+Copyright (c) 2007-2012, Kyle Machulis/Nonpolynomial Labs
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
