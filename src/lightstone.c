@@ -160,7 +160,6 @@ LIGHTSTONE_DECLSPEC int lightstone_valid(struct lightstone* d)
 LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(struct lightstone* dev)
 {
 	lightstone_info ret;
-	//hid_return t;
 	ret.hrv = -1;
 	ret.scl = -1;
 	if (lightstone_valid(dev))
@@ -200,6 +199,7 @@ LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(struct lightstone* dev)
 					}
 				}
 			}
+		}
 	}
 	return ret;
 }
