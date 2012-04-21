@@ -11,6 +11,7 @@
 
 #include "lightstone/lightstone.h"
 #include <hidapi.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -40,15 +41,18 @@ LIGHTSTONE_DECLSPEC struct lightstone* lightstone_create()
 
 LIGHTSTONE_DECLSPEC int lightstone_get_count(struct lightstone* s)
 {
+	int count = 0;
+	struct hid_device_info* devices_old;
+	struct hid_device_info* devices_new;
+	struct hid_device_info* device_cur;
 	if (!s->_is_inited)
 	{
 		return E_LIGHTSTONE_NOT_INITED;
 	}
-	int count = 0;
-	struct hid_device_info* devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
-	struct hid_device_info* devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
+	devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
+	devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
 
-	struct hid_device_info* device_cur = devices_old;
+	device_cur = devices_old;
 	while(device_cur) {
 		++count;
 		device_cur = device_cur->next;
@@ -66,17 +70,19 @@ LIGHTSTONE_DECLSPEC int lightstone_get_count(struct lightstone* s)
 
 LIGHTSTONE_DECLSPEC int lightstone_open(struct lightstone* s, unsigned int device_index)
 {
+	int count = 0;
+	struct hid_device_info* devices_old;
+	struct hid_device_info* devices_new;
+	struct hid_device_info* device_cur;
 	if (!s->_is_inited)
 	{
 		return E_LIGHTSTONE_NOT_INITED;
 	}
 
-	struct hid_device_info* devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
-	struct hid_device_info* devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
+	devices_old = hid_enumerate(lightstone_vid_pid_pairs[0][0],lightstone_vid_pid_pairs[0][1]);
+	devices_new = hid_enumerate(lightstone_vid_pid_pairs[1][0],lightstone_vid_pid_pairs[1][1]);
 
-	int count = 0;
-	
-	struct hid_device_info* device_cur = devices_old;
+	device_cur = devices_old;
 	while(device_cur) {
 		if(count == device_index) {
 			printf("opening %s!\n");
@@ -194,7 +200,6 @@ LIGHTSTONE_DECLSPEC lightstone_info lightstone_get_info(struct lightstone* dev)
 					}
 				}
 			}
-		}
 	}
 	return ret;
 }
