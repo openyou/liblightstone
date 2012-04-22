@@ -122,8 +122,6 @@ int main(int argc, char** argv)
 		printf("Cannot open lightstone!\n");
 		return 1;
 	}
-	Message m("/lightstone");
-	PacketWriter pw;
 	while(1)
 	{		
 		r = lightstone_get_info(test);
@@ -132,6 +130,8 @@ int main(int argc, char** argv)
 			printf("Error reading lightstone, shutting down!\n");
 			break;
 		}
+		Message m("/lightstone");
+		PacketWriter pw;
 		m.clear();
 		m = Message("/lightstone");
 		m.pushFloat(r.hrv);
