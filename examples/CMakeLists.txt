@@ -15,7 +15,7 @@ BUILDSYS_BUILD_EXE(
   SHOULD_INSTALL TRUE
   )
 
-IF(${Argtable_FOUND})
+IF(Argtable_FOUND)
   INCLUDE_DIRECTORIES(${Argtable_INCLUDES})
   SET(SRCS lightstone_osc/lightstone_osc.cpp)
   SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} ${Argtable_LIBRARY})
@@ -30,5 +30,5 @@ IF(${Argtable_FOUND})
     SHOULD_INSTALL TRUE
     )
 ELSE()
-  MESSAGE("Not building lightstone_osc - Either tclap or oscpack not found")
+  MESSAGE("Not building lightstone_osc - Argtable")
 ENDIF()
