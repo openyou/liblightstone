@@ -85,7 +85,6 @@ LIGHTSTONE_DECLSPEC int lightstone_open(struct lightstone* s, unsigned int devic
 	device_cur = devices_old;
 	while(device_cur) {
 		if(count == device_index) {
-			printf("opening %s!\n");
 			s->_dev = hid_open_path(device_cur->path);
 			break;
 		}
