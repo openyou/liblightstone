@@ -61,9 +61,9 @@ LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 LIST(APPEND LIBLIGHTSTONE_DEP_LIBS ${HIDAPI_LIBRARIES})
 
 # #If we build libusb staticly on apple, we need the proper frameworks
-# IF(BUILD_STATIC AND APPLE)
-#   LIST(APPEND LIBLIGHTSTONE_DEP_LIBS "-framework IOKit" "-framework CoreFoundation")
-# ENDIF(BUILD_STATIC AND APPLE)
+IF(BUILD_STATIC AND APPLE)
+  LIST(APPEND LIBLIGHTSTONE_DEP_LIBS "-framework IOKit" "-framework CoreFoundation")
+ENDIF(BUILD_STATIC AND APPLE)
 
 IF(UNIX AND NOT APPLE)
 	SET(CMAKE_INSTALL_RPATH "/usr/lib:/home/qdot/usr/lib:${CMAKE_BINARY_DIR}/lib")
