@@ -15,10 +15,10 @@ BUILDSYS_BUILD_EXE(
   SHOULD_INSTALL TRUE
   )
 
-IF(oscpack_FOUND AND TCLAP_INCLUDE_DIRS)
-  INCLUDE_DIRECTORIES(${Argtable_INCLUDES} ${oscpack_INCLUDE_DIR})
+IF(${Argtable_FOUND})
+  INCLUDE_DIRECTORIES(${Argtable_INCLUDES})
   SET(SRCS lightstone_osc/lightstone_osc.cpp)
-  SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} ${oscpack_LIBS} ${Argtable_LIBRARY})
+  SET(LIBS ${liblightstone_LIBRARY} ${LIBLIGHTSTONE_DEP_LIBS} ${Argtable_LIBRARY})
 
   BUILDSYS_BUILD_EXE(
     NAME lightstone_osc

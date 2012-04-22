@@ -11,25 +11,32 @@
 
 #include <argtable2.h>
 #include <stdio.h>
+#include <iostream>
 #include "lightstone/lightstone.h"
-#include "oscpack/osc/OscOutboundPacketStream.h"
-#include "oscpack/ip/UdpSocket.h"
+#include "oscpkt/oscpkt.hh"
+#include "oscpkt/udp.hh"
 
 #define OUTPUT_BUFFER_SIZE 1024
+
+using std::cout;
+using std::cerr;
+using namespace oscpkt;
 
 int main(int argc, char** argv)
 {
 
-	struct arg_str *host = arg_str0(NULL,"host", NULL, "host to broadcast on (default: 127.0.0.1)");
-	struct arg_int *port = arg_int0(NULL,"port", NULL, "port to broadcast on (default: 7000)");
-	struct arg_int *index = arg_int0(NULL,"index", NULL, "index of device to use (zero based, default: 0)");
-	struct arg_lit *verbose = arg_lit0(NULL,"verbose", "print values to stdout as well as sending to network");
-	struct arg_lit *help = arg_lit0(NULL,"help", "print this help and exit");
-	struct arg_end *end = arg_end(20);
-	void* argtable[] = {host,port,index,help,end};
+	struct arg_str *arg_host = arg_str0(NULL,"host", NULL, "host to broadcast on (default: 127.0.0.1)");
+	struct arg_int *arg_port = arg_int0(NULL,"port", NULL, "port to broadcast on (default: 7000)");
+	struct arg_int *arg_index = arg_int0(NULL,"index", NULL, "index of device to use (zero based, default: 0)");
+	struct arg_lit *arg_verbose = arg_lit0(NULL,"verbose", "print values to stdout as well as sending to network");
+	struct arg_lit *arg_quiet = arg_lit0(NULL,"quiet", "don't print beginning messages (still prints updates if --verbose)");
+	struct arg_lit *arg_help = arg_lit0(NULL,"help", "print this help and exit");
+	struct arg_end *arg_final = arg_end(20);
+	void* argtable[] = {arg_host,arg_port,arg_index,arg_verbose,arg_quiet,arg_help,arg_final};
 	const char* progname = "lightstone_osc";
 	int exitcode=0;
 	int nerrors;
+	bool exitearly = false;
 	
 	if (arg_nullcheck(argtable) != 0) {
 		printf("%s: insufficient memory\n", progname);
@@ -38,14 +45,19 @@ int main(int argc, char** argv)
 		return exitcode;
 	}
 
-	host->sval[0] = "127.0.0.1";
-	port->ival[0] = 7000;
-	index->ival[0] = 0;
+	arg_host->sval[0] = "127.0.0.1";
+	arg_port->ival[0] = 7000;
+	arg_index->ival[0] = 0;
 	nerrors = arg_parse(argc,argv,argtable);
-	
-	printf("lightstone-osc: OSC Utility for Lightstone Data. lightstone-osc --help for options.\n");
+	const char* host = arg_host->sval[0];
+	int port = arg_port->ival[0];
+	int quiet = arg_quiet->count;
+	int verbose = arg_verbose->count;
+	int index = arg_index->ival[0];
+		
+	if(!quiet) printf("lightstone-osc: OSC Utility for Lightstone Data. lightstone-osc --help for options.\n");
 	/* special case: '--help' takes precedence over error reporting */
-	if (help->count > 0) {
+	if (arg_help->count > 0) {
 		printf("Usage: %s", progname);
 		arg_print_syntax(stdout,argtable,"\n");
 		printf("\n");
@@ -59,20 +71,23 @@ int main(int argc, char** argv)
 		printf("should be produced at around 30hz.\n");
 		arg_print_glossary(stdout,argtable,"  %-25s %s\n");
 		exitcode=0;
-		arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-		return exitcode;
+		exitearly = true;
 	}
 
 	/* If the parser returned any errors then display them and exit */
 	if (nerrors > 0) {
 		/* Display the error details contained in the arg_end struct.*/
-		arg_print_errors(stdout,end,progname);
+		arg_print_errors(stdout,arg_final,progname);
 		printf("Try '%s --help' for more information.\n",progname);
 		exitcode=1;
-		arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-		return exitcode;
+		exitearly = true;
 	}
 
+	arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+	if(exitearly) {
+		return exitcode;		
+	}
+	
 	struct lightstone* test;
 	lightstone_info r;
 	int ret, count;
@@ -85,26 +100,30 @@ int main(int argc, char** argv)
 		printf("No lightstones connected!\n");
 		return 1;
 	}
-	printf("Found %d Lightstones\n", count);
-	if(count - 1 < index->ival[0])
+	if(!quiet) printf("Found %d Lightstones\n", count);
+	if(count - 1 < index)
 	{
-		printf("Index %d higher than number of connected lightstones (%d)!\n", index->ival[0], count);
+		printf("Index %d higher than number of connected lightstones (%d)!\n", index, count);
 		return 1;
 	}
 
-	char buffer[OUTPUT_BUFFER_SIZE];
-	osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );
-	UdpTransmitSocket transmitSocket( IpEndpointName( host->sval[0], port->ival[0] ) );
-	printf("Establishing network connection on %s:%d\n", host->sval[0], port->ival[0]);
-	printf("Opening lightstone %d\n", index->ival[0]);
-	ret = lightstone_open(test, index->ival[0] );
-	arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+	UdpSocket sock;
+	sock.connectTo(host, port);
+	if (!sock.isOk()) {
+		printf("Error establishing network connection on %s:%d\n", host, port);
+		return 1;
+	}
+	if(!quiet) printf("Establishing network connection on %s:%d\n", host, port);
+	if(!quiet) printf("Opening lightstone %d\n", index);
+	ret = lightstone_open(test, index);
+	
 	if(ret < 0)
 	{
 		printf("Cannot open lightstone!\n");
 		return 1;
 	}
-	printf("starting!\n");
+	Message m("/lightstone");
+	PacketWriter pw;
 	while(1)
 	{		
 		r = lightstone_get_info(test);
@@ -113,15 +132,13 @@ int main(int argc, char** argv)
 			printf("Error reading lightstone, shutting down!\n");
 			break;
 		}
-    
-		p << osc::BeginBundleImmediate
-			<< osc::BeginMessage( "/lightstone" ) 
-			<< 1.0f << 1.0f << osc::EndMessage 
-			<< osc::EndBundle;
-    
-		transmitSocket.Send( p.Data(), p.Size() );
-		p.Clear();
-		printf ("%f %f\n", r.hrv, r.scl);
+		m.clear();
+		m = Message("/lightstone");
+		m.pushFloat(r.hrv);
+		m.pushFloat(r.scl);
+		pw.startBundle().startBundle().addMessage(m).endBundle().endBundle();
+		bool ok = sock.sendPacket(pw.packetData(), pw.packetSize());
+		if(verbose) printf ("%f %f\n", r.hrv, r.scl);
 	}
 	printf("Closed lightstone\n");
 	lightstone_delete(test);
