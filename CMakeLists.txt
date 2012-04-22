@@ -35,7 +35,6 @@ OPTION(BUILD_EXAMPLES "Build liblightstone examples" ON)
 ######################################################################################
 
 FIND_PACKAGE(HIDAPI)
-FIND_PACKAGE(oscpack)
 FIND_PACKAGE(argtable)
 
 ######################################################################################
@@ -66,7 +65,7 @@ LIST(APPEND LIBLIGHTSTONE_DEP_LIBS ${HIDAPI_LIBRARIES})
 #   LIST(APPEND LIBLIGHTSTONE_DEP_LIBS "-framework IOKit" "-framework CoreFoundation")
 # ENDIF(BUILD_STATIC AND APPLE)
 
-IF(UNIX)
+IF(UNIX AND NOT APPLE)
 	SET(CMAKE_INSTALL_RPATH "/usr/lib:/home/qdot/usr/lib:${CMAKE_BINARY_DIR}/lib")
 	SET(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 	LIST(APPEND LIBLIGHTSTONE_DEP_LIBS "udev")
