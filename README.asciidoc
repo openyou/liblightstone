@@ -42,7 +42,7 @@ information on project generators, look at the cmake documentation.
   system, prints output
 - lightstone-osc - Only built if libosc is available on the system.
   Transmits OSC messages from the selected lightstone. See program
-  options for more info.
+  options (lightstone-osc --help) for more info.
 
 == Notes on Compilation and Usage ==
 
